@@ -1,4 +1,4 @@
-import { createApp } from './main';
+import { createApp } from "./main";
 
 export default (ctx) => {
 	return new Promise((resolve, reject) => {
@@ -11,6 +11,6 @@ export default (ctx) => {
 				return reject({ code: 404 });
 			}
 			return resolve(app);
-		}, reject);
+		}, reject)
 	});
 }

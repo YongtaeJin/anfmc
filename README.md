@@ -1,4 +1,4 @@
-# anfmc
+# ezhome
 
 ## Project setup
 ```
