@@ -49,12 +49,15 @@ const cilentConfig = {
 };
 
 module.exports = {
-	devServer: {
+	devServer : {
 		proxy : {
 			'/api' : {
-				target : `http://localhost:${process.env.VUE_APP_SERVER_PORT}`,
+				target : `http://localhost:${process.env.VUE_APP_SERVER_PORT}`
+			},
+			'/upload' : {
+				target : `http://localhost:${process.env.VUE_APP_SERVER_PORT}`
 			}
-		},
+		}
 	},
 	configureWebpack: process.env.VUE_ENV === 'server' ? serverConfig : cilentConfig,
 }

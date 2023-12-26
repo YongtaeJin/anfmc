@@ -23,7 +23,7 @@ const _axios = axios.create(config);
 _axios.interceptors.request.use(
 	function (config) {
 		const { $Progress } = Vue.prototype;
-		if($Progress) $Progress.start();
+		if ($Progress) $Progress.start();
 
 		return config;
 	},
@@ -37,24 +37,24 @@ _axios.interceptors.request.use(
 _axios.interceptors.response.use(
 	function (response) {
 		const { $Progress, $toast } = Vue.prototype;
-		const {data, status} = response;
+		const { data, status } = response;
 		let msg = "";
 
-		console.log("AJAX", response);
-		if(status != 200) {
+		// console.log("AJAX", response);
+		if (status != 200) {
 			msg = "서버접속 실패";
 		}
-		if(data && data.err) {
+		if (data && data.err) {
 			msg = data.err;
 		}
 
-		if(msg) {
-			if($toast) $toast.error(msg);
-			if($Progress) $Progress.fail();
+		if (msg) {
+			if ($toast) $toast.error(msg);
+			if ($Progress) $Progress.fail();
 			console.warn(msg);
 			return false;
 		} else {
-			if($Progress) $Progress.finish();
+			if ($Progress) $Progress.finish();
 			return data;
 		}
 	},
@@ -64,23 +64,9 @@ _axios.interceptors.response.use(
 	}
 );
 
-const Plugin = {};
-Plugin.install = function (Vue, options) {
-	Vue.axios = _axios;
-	Object.defineProperties(Vue.prototype, {
-		axios: {
-			get() {
-				return _axios;
-			}
-		},
-		$axios: {
-			get() {
-				return _axios;
-			}
-		},
-	});
-};
-
-Vue.use(Plugin)
+Vue.prototype.$axios = _axios;
+if (typeof (window) != 'undefined') {
+	window.$axios = _axios;
+}
 
 export default _axios;

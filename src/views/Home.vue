@@ -1,96 +1,87 @@
 <template>
-  <div>
-    <h1>토스트 테스트</h1>
-    <div>
-      <v-btn @click="toastTest1">토스트 Info</v-btn>
-      <v-btn @click="toastTest2">토스트 Success</v-btn>
-      <v-btn @click="toastTest3">토스트 Error</v-btn>
-      <v-btn @click="toastTest4">토스트 Warning</v-btn>
-      <v-btn @click="toastTest5">전역에러</v-btn>
-    </div>
-    <h1>프로그레스 테스트</h1>
-    <div>
-      <v-btn @click="barTest1">Start</v-btn>
-      <v-btn @click="barTest2">Finish</v-btn>
-      <v-btn @click="barTest3">Fail</v-btn>
-    </div>
-    <h1>Notify 테스트</h1>
-    <div>
-      <v-btn @click="notifyTest1">Alert</v-btn>
-      <v-btn @click="notifyTest2">Confirm</v-btn>
-      <v-btn @click="notifyTest3">Prompt</v-btn>
-    </div>
-    <h1>Axios 테스트</h1>
-		<div>
-			<v-btn @click="axiosTest1">Test</v-btn>
-			<v-btn @click="axiosTest2">Error</v-btn>
-		</div>
-  </div>
+  <v-container fill-height fluid> 
+    <v-row justify="center" >
+      <v-col v-if= "this.$store.state.user.member == undefined" class="text-center" cols="12" align-self="center" >
+        <div class="d-flex justify-center align-center" style="height: 100%">
+          <login-form />
+        </div>
+      </v-col>
+
+      <v-col v-else cols="12">
+        <h1>공지사항</h1> <br>
+        <v-text-field v-model="form.t_title" label="제목" readonly hide-details="false"/>
+        <v-textarea v-model="form.t_content" label="공지내용" readonly hide-details="false" />
+      </v-col>  
+    </v-row>
+    <v-row v-if= "this.$store.state.user.member" class="text-center">
+      <v-col>
+        <v-data-table ref="noticeTable" :headers="headers" :items="data" item-key="i_ser" single-select @click:row="rowSelect">
+          
+        </v-data-table>
+      </v-col>      
+    </v-row>
+    
+  </v-container>
 </template>
 
 <script>
+import qs from "qs";
+import LoginForm from '@/components/auth/LoginForm.vue';
+import { deepCopy } from '../../util/lib';
+
 export default {
+  components: { LoginForm },
+  
   name: "Home",
 	data() {
 		return {
-			title : "My App",
+			title : "스마트공방", 
+      tabs: parseInt(this.$route.query.tabs) || 0,
+      idtbas: 0,
+      items: ["로그인", "아이디 찾기", "비밀번호 찾기"],
+      isLoading: false,
+      
+      headers: [
+        {text: '제목',  value: 't_title', sortable: false, align:'left'},
+        {text: '게시시작일', value: 'd_start', sortable: false, align:'center', width: "120px"}, 
+        {text: '작성자', value: 'n_crnm', sortable: false, align:'center', width: "120px"},        
+      ],
+      data: [],
+      form : { i_ser: "", c_com: "", t_title: "", t_content: "", d_start: "", d_end: "", f_use: "Y", n_crnm: "" },
 		}
 	},
 	title() {
 		return this.title;
 	},
+  mounted(){    
+    if (this.$store.state.user.member && this.$store.state.user.member.c_com) {      
+      this.init();
+    } else {      
+    }
+  },
 	
   methods: {
-    toastTest1() {
-      this.$toast.info("Hello Info");
+    async init() {
+      const query = qs.stringify({c_com: this.$store.state.user.member.c_com});            
+      this.data = await this.$axios.get(`/api/system/getNoticeCom?${query}`);
+      
+      if (this.data.length) {
+        this.form.t_title = this.data[0].t_title
+        this.form.t_content = this.data[0].t_content
+      }
     },
-    toastTest2() {
-      this.$toast.success("Hello success");
+    rowSelect :function (item, row) {            
+      row.select(true);            
+      
+      this.form = deepCopy(item);
     },
-    toastTest3() {
-      this.$toast.error("Hello error");
-    },
-    toastTest4() {
-      this.$toast.warning("Hello warning");
-    },
-    toastTest5() {
-      throw new Error("전역 에러");
-    },
-    barTest1() {
-      this.$Progress.start();
-    },
-    barTest2() {
-      this.$Progress.finish();
-    },
-    barTest3() {
-      this.$Progress.fail();
-    },
-    async notifyTest1() {
-      const res = await this.$ezNotify.alert("테스트 내용입니다.", "안내", {
-        icon: "mdi-video-4k-box",
-      });
-      console.log(res);
-    },
-    async notifyTest2() {
-      const res = await this.$ezNotify.confirm("테스트 내용입니다.", "");
-      console.log(res);
-    },
-    async notifyTest3() {
-      const res = await this.$ezNotify.prompt(
-        "테스트 내용입니다.",
-        "프롬프트",
-        { width: 200 }
-      );
-      console.log(res);
-    },
-		async axiosTest1() {
-			const result = await this.$axios.get('/api/member/test');
-			console.log(result);
-		},
-		async axiosTest2() {
-			const result = await this.$axios.get('/api/error');
-			console.log(result);
-		},
+
+    
   },
 };
 </script>
+
+
+<style>
+
+</style>
