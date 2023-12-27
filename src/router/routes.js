@@ -15,7 +15,8 @@ const routes = [
 	{
 		path: '/login',
 		name: 'NoAuthLogin',
-		component: () => import(/* webpackChunkName: "login" */ '../views/member/Login.vue')
+		component: () => import(/* webpackChunkName: "login" */ '../views/member/LoginForm.vue')
+		// component: () => import(/* webpackChunkName: "login" */ '../views/member/Login.vue')
 		
 	},
 	{

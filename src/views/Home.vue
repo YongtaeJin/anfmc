@@ -1,12 +1,18 @@
 <template>
   <v-container fill-height fluid> 
-    <v-row justify="center" >
-      <v-col v-if= "this.$store.state.user.member == undefined" class="text-center" cols="12" align-self="center" >
-        <div class="d-flex justify-center align-center" style="height: 100%">
-          <login-form />
-        </div>
-      </v-col>
+    <v-row >
+      <v-col v-if= "this.$store.state.user.member == undefined" class="text-center" cols="12" >
+        <!-- <v-img
+          :src="require('../../server/upload/mainlog.jpeg')"          
+          contain
+          height="200"
+        /> -->
+      
+        <v-img src="../assets/logo.png"  contain height="200" />
 
+
+        <!-- <h1><br>스마트공방</h1> -->
+      </v-col>
       <v-col v-else cols="12">
         <h1>공지사항</h1> <br>
         <v-text-field v-model="form.t_title" label="제목" readonly hide-details="false"/>
@@ -26,21 +32,16 @@
 
 <script>
 import qs from "qs";
-import LoginForm from '@/components/auth/LoginForm.vue';
+import SiteTitle from '../components/layout/SiteTitle.vue';
 import { deepCopy } from '../../util/lib';
-
 export default {
-  components: { LoginForm },
+  components: { SiteTitle },
   
   name: "Home",
 	data() {
 		return {
-			title : "스마트공방", 
-      tabs: parseInt(this.$route.query.tabs) || 0,
-      idtbas: 0,
-      items: ["로그인", "아이디 찾기", "비밀번호 찾기"],
-      isLoading: false,
-      
+			title : "스마트공방",   
+      isLoading: false,   
       headers: [
         {text: '제목',  value: 't_title', sortable: false, align:'left'},
         {text: '게시시작일', value: 'd_start', sortable: false, align:'center', width: "120px"}, 

@@ -6,8 +6,7 @@
       </v-toolbar>
       <v-card-text>
         <sing-up-form
-          :cbCheckId="checkId"
-          :cbCheckCom="checkCom"
+          :cbCheckId="checkId"          
           :cbCheckEmail="checkEmail"
           @onSave="save"
 					:isLoading="isLoading"
@@ -33,11 +32,7 @@ export default {
     async checkId(id) {
       const data = await this.duplicateCheck({ field: "i_id", value: id });
       return data;
-    },
-    async checkCom(com) {
-      const data = await this.duplicateCheck({ field: "c_com", value: com });
-      return data;
-    },
+    },    
     async checkEmail(email) {
       const data = await this.duplicateCheck({
         field: "e_email",

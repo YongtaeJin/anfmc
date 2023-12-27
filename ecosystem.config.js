@@ -1,7 +1,7 @@
 module.exports = {
 	apps : [
 		{
-			name : 'sfmc',
+			name : 'anfmc',
 			script : './server/server.js',
 			instances : 2,
 			exec_mode : 'cluster',

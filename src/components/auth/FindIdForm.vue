@@ -1,6 +1,6 @@
 <template>
   <v-form @submit.prevent="save" ref="form" v-model="valid" lazy-validation>
-    <v-text-field label="이름" v-model="form.n_name" :rules="rules.name()" />
+    <v-text-field label="이름(상호명)" v-model="form.n_name" :rules="rules.name()" />
     <v-text-field
       label="이메일"
       v-model="form.e_email"

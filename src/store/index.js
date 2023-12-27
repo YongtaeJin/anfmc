@@ -23,6 +23,80 @@ const store = new Vuex.Store({
 					title : "Home",
 					icon : "mdi-home",
 					to : '/',
+					com : "FMCREG",
+					grant : 2, 
+					newTab : false,
+					subItems : []
+				},
+				{
+					title : "관리자",
+					icon : "mdi-store",
+					to : '',
+					com : "FMCREG",
+					grant : 5, 
+					newTab : false,
+					subItems : [
+						{
+							title : "사용자정보",
+							icon : "",
+							to : '/shop/userlist',							
+							com : "FMCREG",
+							grant : 5, 
+							newTab : false,
+							subItems : []
+						},
+						{
+							title : "사업등록",
+							icon : "",
+							to : '/shop/shopmag',
+							com : "FMCREG",
+							grant : 5, 
+							newTab : false,
+							subItems : []
+						},
+						{
+							title : "사업신청관리",
+							icon : "",
+							to : '/shop/shopinputmag',							
+							com : "FMCREG",
+							grant : 5, 
+							newTab : false,
+							subItems : []
+						},
+						{
+							title : "사업협약서관리",
+							icon : "",
+							to : '/shop/shopargeemag',							
+							com : "FMCREG",
+							grant : 5, 
+							newTab : false,
+							subItems : []
+						},		
+					]
+				},
+				{
+					title : "스마트공방 사업신청",
+					icon : "mdi-store",
+					to : '/shop/signed',
+					com : "FMCREG",
+					grant : 2, 
+					newTab : false,
+					subItems : []
+				},
+				{
+					title : "스마트공방 협약신청",
+					icon : "mdi-store-plus",
+					to : '/shop/agree',
+					com : "FMCREG",
+					grant : 2, 
+					newTab : false,
+					subItems : []
+				},
+
+				{
+					title : "Home",
+					icon : "mdi-home",
+					to : '/',					
 					grant : 2, 
 					newTab : false,
 					subItems : []

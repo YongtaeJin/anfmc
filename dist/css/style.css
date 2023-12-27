@@ -268,10 +268,10 @@ table.type07 {
 	text-align: left;
 }
 .v-tabs { height: 26px; }
-.v-tab {
+/*.v-tab {
 	font-size: 0.8rem;
 	height: 20px; 	
-}
+} */
 
 .no-padding {
     padding: 0;

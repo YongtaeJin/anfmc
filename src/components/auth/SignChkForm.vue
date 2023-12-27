@@ -1,5 +1,6 @@
 <template>
-  <v-form @submit.prevent="save" ref="form" v-model="valid" lazy-validation>    
+  <v-form @submit.prevent="save" ref="form" v-model="valid" lazy-validation>
+    
     <v-text-field label="아이디" v-model="form.i_id" :rules="rules.id()" />
     <input-password
       label="비밀번호"
@@ -17,7 +18,7 @@ import validateRules from "../../../util/validateRules";
 import InputPassword from "../InputForms/InputPassword.vue";
 export default {
   components: { InputPassword },
-  name: "SignChkForm",
+  name: "SignInForm",
   props: {
     isLoading: {
       type: Boolean,
@@ -28,7 +29,7 @@ export default {
     return {
       valid: true,
       form: {
-        c_com: "",
+        c_com: "FMCREG",
         i_id: "",
         p_idcom: "",
         p_password: "",

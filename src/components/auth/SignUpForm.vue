@@ -1,15 +1,6 @@
 <template>
   <v-form @submit.prevent="save" ref="form" v-model="valid" lazy-validation>
     <input-duplicate-check
-      ref="com"
-      v-model="form.c_com"
-      label="사업장"
-      prepend-icon="mdi-domain"
-      counter="5"
-      :rules="rules.id()"
-      :cbCheck="cbCheckCom"
-    />
-    <input-duplicate-check
       ref="id"
       v-model="form.i_id"
       label="아이디"
@@ -20,7 +11,7 @@
     />
 
     <v-text-field
-      label="이름"
+      label="이름(상호명)"
       v-model="form.n_name"
       prepend-icon="mdi-card-account-details-outline"
       :rules="rules.name()"
@@ -92,7 +83,7 @@ export default {
     return {
       valid: true,
       form: {
-        c_com: "",
+        c_com: "FMCREG",
         i_id: "",
         p_password: "",
         n_name: "",        
@@ -110,8 +101,7 @@ export default {
       this.$refs.form.validate();
       await this.$nextTick();
       if (!this.valid) return;
-      if (!this.$refs.id.validate()) return;
-      if (!this.$refs.com.validate()) return;
+      if (!this.$refs.id.validate()) return;      
       if (!this.$refs.email.validate()) return;
 
 			const formData = new FormData();
