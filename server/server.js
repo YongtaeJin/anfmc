@@ -11,7 +11,7 @@ const numCPUs = require('os').cpus().length;
 (async function () {
 	// 앱 초기화
 	const app = express();
-	const port = process.env.VUE_APP_SERVER_PORT || 3000;
+	const port = process.env.VUE_APP_SERVER_PORT || 4014;
 	const webServer = http.createServer(app);
 
 	const configModel = require('./api/_model/configModel');
@@ -93,7 +93,7 @@ const numCPUs = require('os').cpus().length;
 
 		const ctx = {
 			url: req.url,
-			title: 'SFMC App',
+			title: 'ANFMC App',
 			metas: `<!-- inject more metas -->`,
 			token: req.cookies.token || null,
 			member: req.user || null,

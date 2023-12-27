@@ -2,16 +2,7 @@
   <v-container fill-height fluid> 
     <v-row >
       <v-col v-if= "this.$store.state.user.member == undefined" class="text-center" cols="12" >
-        <!-- <v-img
-          :src="require('../../server/upload/mainlog.jpeg')"          
-          contain
-          height="200"
-        /> -->
-      
-        <v-img src="../assets/logo.png"  contain height="200" />
-
-
-        <!-- <h1><br>스마트공방</h1> -->
+        <login-form :isHome="true"></login-form>
       </v-col>
       <v-col v-else cols="12">
         <h1>공지사항</h1> <br>
@@ -33,9 +24,9 @@
 <script>
 import qs from "qs";
 import SiteTitle from '../components/layout/SiteTitle.vue';
-import { deepCopy } from '../../util/lib';
+import LoginForm from './member/LoginForm.vue';
 export default {
-  components: { SiteTitle },
+  components: { SiteTitle, LoginForm },
   
   name: "Home",
 	data() {
@@ -72,8 +63,7 @@ export default {
       }
     },
     rowSelect :function (item, row) {            
-      row.select(true);            
-      
+      row.select(true);                  
       this.form = deepCopy(item);
     },
 

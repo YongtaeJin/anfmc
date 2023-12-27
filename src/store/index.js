@@ -23,8 +23,7 @@ const store = new Vuex.Store({
 					title : "Home",
 					icon : "mdi-home",
 					to : '/',
-					com : "FMCREG",
-					grant : 2, 
+					grant : 1, 
 					newTab : false,
 					subItems : []
 				},
@@ -93,18 +92,19 @@ const store = new Vuex.Store({
 					subItems : []
 				},
 
-				{
-					title : "Home",
-					icon : "mdi-home",
-					to : '/',					
-					grant : 2, 
-					newTab : false,
-					subItems : []
-				},
+				// {
+				// 	title : "Home",
+				// 	icon : "mdi-home",
+				// 	to : '/',					
+				// 	grant : 2, 
+				// 	newTab : false,
+				// 	subItems : []
+				// },
 				{
 					title : "시스템관리",
 					icon : "mdi-database-settings",
 					to : '',
+					com : "FMC",
 					grant : 8, 
 					newTab : false,
 					subItems : [
@@ -112,6 +112,7 @@ const store = new Vuex.Store({
 							title : "공통코드관리",
 							icon : "",
 							to : '/adm/systemcode',
+							com : "FMC",
 							grant : 9, 
 							newTab : false,
 							subItems : []
@@ -120,6 +121,7 @@ const store = new Vuex.Store({
 							title : "사용자관리",
 							icon : "",
 							to : '/adm/systemusers',
+							com : "FMC",
 							grant : 9, 
 							newTab : false,
 							subItems : []
@@ -128,6 +130,7 @@ const store = new Vuex.Store({
 							title : "공지관리",
 							icon : "",
 							to : '/adm/notice',
+							com : "FMC",
 							grant : 8, 
 							newTab : false,
 							subItems : []
@@ -138,6 +141,7 @@ const store = new Vuex.Store({
 					title : "기준정보",
 					icon : "mdi-ab-testing",
 					to : '',
+					com : "FMC",
 					grant : 8, 
 					newTab : false,
 					subItems : [
@@ -145,6 +149,7 @@ const store = new Vuex.Store({
 							title : "사원관리",
 							icon : "",
 							to : '/base/hrbase',
+							com : "FMC",
 							grant : 8, 
 							newTab : false,
 							subItems : []
@@ -153,6 +158,7 @@ const store = new Vuex.Store({
 							title : "거래처관리",
 							icon : "",
 							to : '/base/vend',
+							com : "FMC",
 							grant : 8, 
 							newTab : false,
 							subItems : []
@@ -161,6 +167,7 @@ const store = new Vuex.Store({
 							title : "품목관리",
 							icon : "",
 							to : '/base/item',
+							com : "FMC",
 							grant : 8, 
 							newTab : false,
 							subItems : []
@@ -169,6 +176,7 @@ const store = new Vuex.Store({
 							title : "공정관리",
 							icon : "",
 							to : '/base/process',
+							com : "FMC",
 							grant : 8, 
 							newTab : false,
 							subItems : []
@@ -177,6 +185,7 @@ const store = new Vuex.Store({
 							title : "공정유형관리",
 							icon : "",
 							to : '/base/prtype',
+							com : "FMC",
 							grant : 8, 
 							newTab : false,
 							subItems : []
@@ -185,6 +194,7 @@ const store = new Vuex.Store({
 							title : "라우팅관리",
 							icon : "",
 							to : '/base/route',
+							com : "FMC",
 							grant : 8, 
 							newTab : false,
 							subItems : []
@@ -195,6 +205,7 @@ const store = new Vuex.Store({
 					title : "영업관리",
 					icon : "mdi-handshake",
 					to : '',
+					com : "FMC",
 					grant : 7, 
 					newTab : false,
 					subItems : [
@@ -202,6 +213,7 @@ const store = new Vuex.Store({
 							title : "견적등록",
 							icon : "",
 							to : '/sales/estimate',
+							com : "FMC",
 							grant : 7, 
 							newTab : false,
 							subItems : []
@@ -210,6 +222,7 @@ const store = new Vuex.Store({
 							title : "견적제출현황",
 							icon : "",
 							to : '/sales/estimatelist',
+							com : "FMC",
 							grant : 7, 
 							newTab : false,
 							subItems : []
@@ -218,6 +231,7 @@ const store = new Vuex.Store({
 							title : "수주등록",
 							icon : "",
 							to : '/sales/orders',
+							com : "FMC",
 							grant : 7, 
 							newTab : false,
 							subItems : []
@@ -226,6 +240,7 @@ const store = new Vuex.Store({
 							title : "수주(출하)현황",
 							icon : "",
 							to : '/sales/orderslist',
+							com : "FMC",
 							grant : 7, 
 							newTab : false,
 							subItems : []
@@ -236,6 +251,7 @@ const store = new Vuex.Store({
 					title : "생산계획",
 					icon : "mdi-wrench",
 					to : '',
+					com : "FMC",
 					grant : 6, 
 					newTab : false,
 					subItems : [
@@ -243,6 +259,7 @@ const store = new Vuex.Store({
 							title : "생산계획",
 							icon : "",
 							to : '/prod/plan',
+							com : "FMC",
 							grant : 6, 
 							newTab : false,
 							subItems : []
@@ -251,6 +268,7 @@ const store = new Vuex.Store({
 							title : "작업지시",
 							icon : "",
 							to : '/prod/workorder',
+							com : "FMC",
 							grant : 6, 
 							newTab : false,
 							subItems : []
@@ -261,6 +279,7 @@ const store = new Vuex.Store({
 					title : "생산관리",
 					icon : "mdi-basket-fill",
 					to : '',
+					com : "FMC",
 					grant : 6, 
 					newTab : false,
 					subItems : [
@@ -268,6 +287,7 @@ const store = new Vuex.Store({
 							title : "생산실적",
 							icon : "",
 							to : '/prod/work',
+							com : "FMC",
 							grant : 6, 
 							newTab : false,
 							subItems : []
@@ -276,6 +296,7 @@ const store = new Vuex.Store({
 							title : "생산실적조회",
 							icon : "",
 							to : '/prod/workview',
+							com : "FMC",
 							grant : 6, 
 							newTab : false,
 							subItems : []
@@ -284,6 +305,7 @@ const store = new Vuex.Store({
 							title : "공정진행현황",
 							icon : "",
 							to : '/prod/workorderview',
+							com : "FMC",
 							grant : 6, 
 							newTab : false,
 							subItems : []
@@ -294,6 +316,7 @@ const store = new Vuex.Store({
 					title : "출하관리",
 					icon : "mdi-car-multiple",
 					to : '',
+					com : "FMC",
 					grant : 6, 
 					newTab : false,
 					subItems : [
@@ -301,6 +324,7 @@ const store = new Vuex.Store({
 							title : "출하등록",
 							icon : "",
 							to : '/shipment/derliver',
+							com : "FMC",
 							grant : 6, 
 							newTab : false,
 							subItems : []
@@ -309,6 +333,7 @@ const store = new Vuex.Store({
 							title : "출하현황",
 							icon : "",
 							to : '/shipment/derliverlist',
+							com : "FMC",
 							grant : 6, 
 							newTab : false,
 							subItems : []
@@ -317,6 +342,7 @@ const store = new Vuex.Store({
 							title : "세금계산서등록(거래명세서)",
 							icon : "",
 							to : '/shipment/invoice',
+							com : "FMC",
 							grant : 7, 
 							newTab : false,
 							subItems : []
@@ -325,6 +351,7 @@ const store = new Vuex.Store({
 							title : "대금수금등록",
 							icon : "",
 							to : '/shipment/account',
+							com : "FMC",
 							grant : 7, 
 							newTab : false,
 							subItems : []
@@ -333,6 +360,7 @@ const store = new Vuex.Store({
 							title : "수금현황",
 							icon : "",
 							to : '/shipment/invoicelist',
+							com : "FMC",
 							grant : 7, 
 							newTab : false,
 							subItems : []
@@ -343,6 +371,7 @@ const store = new Vuex.Store({
 					title : "실적분석",
 					icon : "mdi-chart-bar-stacked",
 					to : '',
+					com : "FMC",
 					grant : 6, 
 					newTab : false,
 					subItems : [
@@ -350,6 +379,7 @@ const store = new Vuex.Store({
 							title : "납기내역",
 							icon : "",
 							to : '/metrics/derliver',
+							com : "FMC",
 							grant : 6, 
 							newTab : false,
 							subItems : []
@@ -358,6 +388,7 @@ const store = new Vuex.Store({
 							title : "불량율 분석",
 							icon : "",
 							to : '/metrics/defectrate',
+							com : "FMC",
 							grant : 6, 
 							newTab : false,
 							subItems : []
@@ -366,6 +397,7 @@ const store = new Vuex.Store({
 							title : "고객별 매출 분석",
 							icon : "",
 							to : '/metrics/clientsales',
+							com : "FMC",
 							grant : 7, 
 							newTab : false,
 							subItems : []
@@ -374,6 +406,7 @@ const store = new Vuex.Store({
 							title : "기간별 매출 분석",
 							icon : "",
 							to : '/metrics/periodsales',
+							com : "FMC",
 							grant : 7, 
 							newTab : false,
 							subItems : []
@@ -384,6 +417,7 @@ const store = new Vuex.Store({
 					title : "설비모니터링",
 					icon : "mdi-monitor",
 					to : '/monitor/monitor1',
+					com : "FMC",
 					grant : 2, 
 					newTab : false,
 					subItems : []
@@ -392,6 +426,7 @@ const store = new Vuex.Store({
 					title : "KPI",
 					icon : "mdi-lan-connect",
 					to : '',
+					com : "FMC",
 					grant : 11, 
 					newTab : false,
 					subItems : [
@@ -399,6 +434,7 @@ const store = new Vuex.Store({
 							title : "Level 1",
 							icon : "",
 							to : '/kpi/level1',
+							com : "FMC",
 							grant : 6, 
 							newTab : false,
 							subItems : []
@@ -407,6 +443,7 @@ const store = new Vuex.Store({
 							title : "Level 2",
 							icon : "",
 							to : '/kpi/level2',
+							com : "FMC",
 							grant : 6, 
 							newTab : false,
 							subItems : []
@@ -415,6 +452,7 @@ const store = new Vuex.Store({
 							title : "Level 3",
 							icon : "",
 							to : '/kpi/level3',
+							com : "FMC",
 							grant : 6, 
 							newTab : false,
 							subItems : []

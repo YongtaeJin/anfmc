@@ -1,5 +1,5 @@
 const TABLE = {
-	MEMBER : 'member',
+	MEMBER : 'tb_members',
 	USERS : 'tb_users',
 	SEND_MAIL : 'tb_send_mail',
 	CONFIG : 'config',	

@@ -18,13 +18,13 @@
                         <v-card-text>
                             <v-tabs-items v-model="tabs">
                                 <v-tab-item>
-                                    <sign-chk-form  @save="loginLocal" :isLoading="isLoading"></sign-chk-form>                                    
+                                    <sign-chk-form @save="loginLocal" :isLoading="isLoading"></sign-chk-form>                                    
                                 </v-tab-item>
                                 <v-tab-item>
-                                    <find-id-form></find-id-form>
+                                    <find-id-form @save="findId" :isLoading="isLoading"></find-id-form>
                                 </v-tab-item>
                                 <v-tab-item>
-                                    <find-pw-form></find-pw-form>
+                                    <find-pw-form @save="findPw" :isLoading="isLoading"></find-pw-form>
                                 </v-tab-item>
                             </v-tabs-items>
                         </v-card-text>
@@ -54,6 +54,12 @@
   export default {
     components: { SiteTitle, SignInForm, FindIdForm, FindPwForm, SignChkForm },
     name: "Login",
+    props: {
+      isHome: {
+            type : Boolean,
+            default: false,
+        },
+    },
     data() {
       return {
         // tabs: parseInt(this.$route.query.tabs) || 0,
@@ -74,14 +80,16 @@
         if (data) {
           const n_name = this.$store.state.user.member.n_name;
           this.$toast.info(`${n_name}님 환영합니다.`);
-          this.$router.push("/");
+          if (!this.isHome) {
+            this.$router.push("/");
+          }
         }
       },
       async findId(form) {
         this.isLoading = true;
         const data = await this.findIdLocal(form);
         this.isLoading = false;
-        if (data && data.mb_id) {
+        if (data && data.i_id) {
           await this.$ezNotify.alert(
             `<span style="font-size:1.5em">회원 아이디 : [ <b>${data.i_id}</b> ]</span>`,
             "아이디 찾기 결과"
@@ -92,44 +100,13 @@
       async findPw(form) {
         this.isLoading = true;
         const data = await this.findPwLocal(form);
-        this.isLoading = false;
+        this.isLoading = false;        
         if (data) {
           await this.$ezNotify.alert(
-            `${data.mb_name}님<br><b>${form.e_email}</b>로 이메일 발송하였습니다.`,
+            `${data.n_name}님<br><b>${form.e_email}</b>로 이메일 발송하였습니다.`,
             "이메일 발송 성공"
           );
           this.tabs = 0;
-        }
-      },
-      loginGoogle() {
-        this.loginSocial("/api/member/loginGoogle");
-      },
-      loginKakao() {
-        this.loginSocial("/api/member/loginKakao");
-      },
-      loginNaver() {
-        this.loginSocial("/api/member/loginNaver");
-      },
-      loginSocial(url) {
-        window.open(
-          url,
-          "Auth",
-          "top=10, left=10, width=500, height=600, status=no, menubar=no, toolbar=no, resizeable=no"
-        );
-        if (!window.onSocialCallback) {
-          window.onSocialCallback = this.socialLoginCallback;
-        }
-      },
-      socialLoginCallback(payload) {
-        if (payload.err) {
-          this.$toast.error(payload.err);
-        } else {
-          this.SET_MEMBER(payload.member);
-          this.SET_TOKEN(payload.token);
-          this.$router.push("/");
-          this.$toast.info(
-            `${this.$store.state.user.member.n_name}님 환영합니다.`
-          );
         }
       },
     },
