@@ -219,6 +219,20 @@ const routes = [
 		name: 'Error',
 		component: () => import(/* webpackChunkName: "error" */ '../views/Error.vue')
 	},
+
+	//////////////////  스마트공방 신청 (등록) /////////////////////////////////
+	{
+		path: '/shop/shopmag',
+		name: 'ShopMag',
+		component: () => import(/* webpackChunkName: "ShopMag" */ '../views/shop/Shopmagview.vue')
+	},
+	{
+		path: '/shop/ShopSigned',
+		name: 'ShopSigned',
+		component: () => import(/* webpackChunkName: "ShopSigned" */ '../views/shop/ShopSignedView.vue')
+	},
+
+	
 ]
 
 export default routes;

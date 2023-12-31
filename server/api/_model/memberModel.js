@@ -63,7 +63,7 @@ const memberModel = {
 		delete payload.mb_image;
 		const fileName = jwt.getRandToken(16);
 		if (req.files && req.files.mb_image) {
-			payload.mb_photo = `/upload/memberPhoto/${fileName}.jpg`;
+			payload.t_photo = `/upload/memberPhoto/${fileName}.jpg`;
 			req.files.mb_image.mv(`${MEMBER_PHOTO_PATH}/${fileName}.jpg`, (err) => {
 				if (err) {
 					console.log("Member Image Upload Error", err);
@@ -78,7 +78,7 @@ const memberModel = {
 	},
 	async updateMember(req) {
 		// return {body : req.body, file:req.files};
-		console.log("req.files", req.files);
+		// console.log("req.files", req.files);
 		const at = moment().format('LT');
 		const ip = getIp(req);
 
@@ -87,20 +87,24 @@ const memberModel = {
 			d_update_at : at,
 			t_update_ip : ip,
 		};
-		
 
+		const i_id = payload.i_id;
+		const c_com = payload.c_com;
+		
 		const admMode = payload.admMode;
-		const mb_id = payload.i_id;
 		const deleteImage = payload.deleteImage;
 		delete payload.admMode;
 		delete payload.i_id;
+		delete payload.c_com;
 		delete payload.deleteImage;
 
 		// 비밀번호가 변경 해야 한다
 		if(payload.p_password) {			
+			payload.i_password = payload.p_password;
 			payload.p_password = jwt.generatePassword(payload.p_password);
 		} else {
-			delete payload.t_password;			
+			delete payload.p_password;
+			delete payload.i_password;
 		}
 
 		// 이미지 처리
@@ -111,14 +115,14 @@ const memberModel = {
 		const oldFile = `${MEMBER_PHOTO_PATH}/${oldName}.jpg`;
 		const cachePath = `${MEMBER_PHOTO_PATH}/.cache`;
 
-		console.log(mb_photo, photoPathInfo); ///////////////////////////////
+		// console.log(mb_photo, photoPathInfo); ///////////////////////////////
 
 		// 기존 이미지 삭제
 		if(deleteImage || (req.files && req.files.mb_image)) {
 			payload.t_photo = '';
 			try {
 				fs.unlinkSync(oldFile);
-				const cacheDir = fs.readdirSync(cachePath);
+				const cacheDir = fs.readdirSync(cachePath); 
 				for(const p of cacheDir) {
 					if(p.startsWith(oldName)) {
 						try {
@@ -139,11 +143,11 @@ const memberModel = {
 					console.log('Member Photo 업로드 실패', err);
 				}
 			})
-		}
+		}		
 
-		const sql = sqlHelper.Update(TABLE.MEMBER, payload, {i_id});
+		const sql = sqlHelper.Update(TABLE.MEMBER, payload, {c_com, i_id});
 		const [row] = await db.execute(sql.query, sql.values);
-		return await memberModel.getMemberBy({i_id});
+		return await memberModel.getMemberBy({c_com, i_id});
 	},
 	async getMemberBy(form, cols = []) {		
 		const { p_idcom } = form;		

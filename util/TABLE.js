@@ -29,6 +29,10 @@ const TABLE = {
 	KPI1: 'tb_kpilevel1',
 	KPI2: 'tb_kpilevel2',
 	KPI3: 'tb_kpilevel3',
+
+	SHOPMAG: 'tb_shopmag',
+	SHOPMAGFLE: 'tb_shopmag_file',
+
 };
 
 module.exports = TABLE;

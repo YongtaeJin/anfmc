@@ -76,7 +76,7 @@ const store = new Vuex.Store({
 				{
 					title : "스마트공방 사업신청",
 					icon : "mdi-store",
-					to : '/shop/signed',
+					to : '/shop/ShopSigned',
 					com : "FMCREG",
 					grant : 2, 
 					newTab : false,

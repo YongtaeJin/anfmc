@@ -19,7 +19,7 @@ const numCPUs = require('os').cpus().length;
 
 	const kpiModel = require('./api/_model/kpiModel');
 	setInterval(() => {
-		kpiModel.load();
+		// kpiModel.load();  // KPI 자동 정송
 	}, 60 * 1000); // 1분 = 60초 * 1000밀리초
 	
 	let isDiableKeepAlive = false;

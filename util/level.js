@@ -7,6 +7,7 @@ const level = {
 		MANAGER: 5,
 		PRODUCTION: 6,
 		BUSINESS: 7,
+		VIP: 8,
 		ADMIN: 8,
 		SYSTEM: 9,
 		SUPER: 10
