@@ -13,7 +13,7 @@
         <v-card-text>
             <v-tabs-items v-model="tabs">
                 <v-tab-item><signed-p-01-form @save="save1" :i_shop=shopchk.i_shop :item=shopinfo :f_chk=shopinfo[0]?.f_persioninfo></signed-p-01-form></v-tab-item>
-                <v-tab-item><signed-p-02-form @save="save2"></signed-p-02-form></v-tab-item>
+                <v-tab-item><signed-p-02-form @save="save2" :item=shopinfo></signed-p-02-form></v-tab-item>
                 <v-tab-item>3</v-tab-item>
                 <v-tab-item>4</v-tab-item>
             </v-tabs-items>
@@ -89,16 +89,18 @@ export default {
             this.shopinfo = await this.$axios.get(`/api/shopinfo/ShopinfoDetail?${query}`);
             if (this.shopinfo) {
                 // 개인정보 동의 후 회사정보  tab으로 이동 처리
-                this.f_chk = this.shopinfo[0].f_persioninfo;
-                console.log("aa", this.shopinfo[0].f_persioninfo)
-                
+                this.f_chk = this.shopinfo[0]?.f_persioninfo;
             }
                 
         },
 
         async save1(form) {
             const data = await this.$axios.post(`/api/shopinfo/ShopinfoUpdate`, form)
-            console.log(data);
+            if (data.affectedRows > 0) {                
+                const query = qs.stringify({i_shop: this.shopchk.i_shop, i_id: this.$store.state.user.member?.i_id});
+                this.shopinfo = await this.$axios.get(`/api/shopinfo/ShopinfoDetail?${query}`);
+                if (this.shopinfo) this.f_chk = this.shopinfo[0].f_persioninfo;
+            }
         },
         async save2(form) {
             console.log(form)
