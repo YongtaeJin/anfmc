@@ -61,8 +61,7 @@ export default {
             valid: true,
             form: {
                 i_shop: null,
-                i_no: null,
-                i_userid: null,
+                i_id: null,
                 f_persioninfo: null,
                 d_persioninfo: null,
                 i_regno: null,

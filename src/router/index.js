@@ -4,6 +4,8 @@ import routes from './routes';
 import store from '../store';
 import { LV, LV_LABEL } from '../../util/level';
 
+
+
 Vue.use(VueRouter)
 
 export function createRouter() {
@@ -32,34 +34,48 @@ export function createRouter() {
 		const GRANT = store.getters['user/GRANT'];
 		const isMember = !!store.state.user.member;		
 
-		if ( isMember ) {
-			const log = {
-				c_com: store.state.user.member.c_com,
-				i_id: store.state.user.member.i_id,
-				n_name: store.state.user.member.n_name,
-				i_level: store.state.user.member.i_level,
-				to_name: to.name,
-				to_path: to.path,
-				from_name: from.name,
-				from_path: from.path,
-			};
-			$axios.post(`/api/system/openLog`, log);
-		}
+		// if ( isMember ) {
+		// 	const log = {
+		// 		c_com: store.state.user.member.c_com,
+		// 		i_id: store.state.user.member.i_id,
+		// 		n_name: store.state.user.member.n_name,
+		// 		i_level: store.state.user.member.i_level,
+		// 		to_name: to.name,
+		// 		to_path: to.path,
+		// 		from_name: from.name,
+		// 		from_path: from.path,
+		// 	};
+		// 	$axios.post(`/api/system/openLog`, log);
+		// }
 
-		let msg = '';		
+		let msg = '';
 		if (to.name.startsWith('NoAuth') && isMember) {
 			// 비회원 인경우에만 접근
 			msg = "이미 로그인 되어 있습니다.";
 		} else if (to.name.startsWith('Adm') && GRANT < LV.SUPER ) {
 			// 관리자 전용 페이지
-			msg = `${LV_LABEL(LV.SUPER)}(${LV.SUPER}) 이상 접근 가능합니다.`;
+			msg = `${LV_LABEL(LV.SUPER)}(${LV.SUPER}) 이상 접근 가능합니다.`;			
 		} else {
-			// 메뉴 접근 레벨에 따름			
+			// 메뉴 접근 레벨에 따름
 			const accessLV = access[to.path] || LV.BLOCK;
-			if (accessLV > GRANT) {
-				msg = `${LV_LABEL(accessLV)}(${accessLV}) 이상 접근 가능합니다.`;
+			if (!isMember) {				
+				if (to.path !== '/' && to.path !== '/login') {
+					// msg = '로그인 후 사용 가능합니다.'					
+				} 
+			} else {
+				if (to.path.startsWith('/shop/')) {					
+					if (store.state.user.member?.c_com !== 'FMCREG') {
+						msg = '잘못된 접급 입니다.'
+						if ($toast) $toast.error(msg);
+						if ($Progress) $Progress.fail();
+						return next('/');						
+					}
+				} else if (accessLV > GRANT) {
+					msg = `${LV_LABEL(accessLV)}(${accessLV}) 이상 접근 가능합니다.`;
+				}
 			}
 		}
+
 		if (msg) {
 			// 접근 차단
 			if ($toast) $toast.error(msg);
@@ -68,7 +84,7 @@ export function createRouter() {
 				next(false);			
 			} else { // 이전 경로가 없으면 홈으로 이동 또는 로그인 페이지로 보내도 됨
 				return isMember ? next('/') : next({
-					name: 'NoAuthLogin',
+					name: 'NotLogin',
 					query: { next: to.fullPath }
 				});
 			}

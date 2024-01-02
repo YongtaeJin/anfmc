@@ -1,9 +1,14 @@
 <template>
-    <v-form @submit.prevent="save" ref="form">
-        <v-checkbox         
+    <v-form @submit.prevent="save" ref="form">        
+        
+        <v-checkbox v-model="form.f_persioninfo" :disabled="!!f_chk=='1'"
             label="개인정보 수집 및 이용 동의함" color="success" value="1" hide-details>
         </v-checkbox>
-        <v-btn             
+            
+        
+        
+        <div class="right2-align"> 동의일자 : {{ form.d_persioninfo }}  </div>
+        <v-btn :disabled="!!f_chk=='1'"
             color="primary" type="submit" block>동의함
         </v-btn>
 
@@ -35,20 +40,63 @@
 </template>
 
 <script>
+import { deepCopy } from "../../../../util/lib";
 export default {
     name: "SignedP01Form",
     props: {
-      
+        i_shop : {
+            typeof : String,
+            default: null,
+        },
+        item : {
+            typeof : Object,
+            default: null,
+        },
+        f_chk : {
+            typeof: String,
+            default: null,
+        }
+    },
+    watch: {
+        i_shop(val) {
+            this.init();
+        },
+        
+        item(val) {            
+            this.init();            
+        },
+    },
+    create() {
+        this.init();
     },
     data() {
         return {
             valid: true,
             form: {
+                i_shop: null,
+                i_id: null,
+                f_persioninfo: "1",
+                d_persioninfo: null,            
             },
         }
     },
-    methods: {      
-        async save() {
+    methods: {
+        init() {            
+            
+            if (this.item.length) {                
+                this.form.i_shop = this.item[0].i_shop;
+                this.form.i_id = this.item[0].i_id;
+                this.form.f_persioninfo = this.item[0].f_persioninfo
+                this.form.d_persioninfo = this.item[0].d_persioninfo
+                
+            } else {
+                this.form.i_shop = this.i_shop;
+                this.form.i_id =  this.$store.state.user.member?.i_id;
+                this.form.f_persioninfo = '1'
+            }
+            
+        },
+        async save() {            
             this.$emit("save", this.form);
         }
     }

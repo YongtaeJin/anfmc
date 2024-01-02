@@ -510,7 +510,7 @@ const store = new Vuex.Store({
 		async appInit({ dispatch, commit }, ctx) {
 			if (ctx) {
 				const keys = Object.keys(ctx.config);
-				for (const key of keys) {
+				for (const key of keys) {					
 					commit('SET_CONFIG', { key, value: ctx.config[key] });
 				}
 				commit('user/SET_MEMBER', ctx.member);

@@ -35,6 +35,19 @@ router.post('/shopAddFileDelete', async (req, res) => {
 	res.json(result);
 }),
 
+// 접속일 기준 스마트공방 신청 list 있는지 체크
+router.get('/checkShopinfo', async (req, res)=> {
+	const result = await modelCall(shopinfoModel.checkShopinfo, req);
+	res.json(result);
+}),
+router.get('/ShopinfoDetail', async (req, res)=> {
+	const result = await modelCall(shopinfoModel.ShopinfoDetail, req);
+	res.json(result);
+}),
+router.post('/ShopinfoUpdate', async (req, res)=> {
+	const result = await modelCall(shopinfoModel.ShopinfoUpdate, req);
+	res.json(result);
+}),
 
 // 첨부파일 upload
 router.patch('/attfiles/upload', async (req, res)=> {	

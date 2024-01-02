@@ -32,6 +32,7 @@ const TABLE = {
 
 	SHOPMAG: 'tb_shopmag',
 	SHOPMAGFLE: 'tb_shopmag_file',
+	SHOPINPUT: 'tb_shopinput',
 
 };
 

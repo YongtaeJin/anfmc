@@ -79,6 +79,12 @@ export default {
             i_sort_max: 0,
         }
     },
+    beforeCreate() {        
+        if (!this.$store.state.user.member?.c_com) {            
+            this.$router.push("/").catch( () => {this.$toast.error('잘못된 접급 입니다.')}); 
+            return
+        }
+    },
     mounted() {
         // 창 크기가 변경될 때마다 iframe의 높이를 조정
         window.addEventListener('resize', this.adjustIframeHeight);

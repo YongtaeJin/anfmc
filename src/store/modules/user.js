@@ -9,7 +9,17 @@ export const state = () => ({
 
 export const mutations = {
 	SET_MEMBER(state, member) {
-		state.member = member;
+		if(member) {
+			delete member.d_create_at;
+			delete member.d_leave_at;
+			delete member.d_login_at;
+			delete member.d_update_at;
+			delete member.t_update_ip;
+			delete member.e_email;
+			delete member.t_create_ip;
+			delete member.t_login_ip;
+		}
+		state.member = member;		
 	},
 	SET_TOKEN(state, token) {
 		state.token = token;

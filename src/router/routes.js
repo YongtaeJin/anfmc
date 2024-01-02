@@ -219,6 +219,13 @@ const routes = [
 		name: 'Error',
 		component: () => import(/* webpackChunkName: "error" */ '../views/Error.vue')
 	},
+	{
+		path: '/notlogin',
+		name: 'NotLogin',
+		component: () => import(/* webpackChunkName: "error" */ '../views/NotLoginView.vue')
+	},
+
+	
 
 	//////////////////  스마트공방 신청 (등록) /////////////////////////////////
 	{

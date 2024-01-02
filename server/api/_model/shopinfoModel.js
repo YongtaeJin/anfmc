@@ -3,19 +3,29 @@ const path = require('path');
 
 const db = require('../../plugins/mysql');
 const jwt = require('../../plugins/jwt');
-const sendMailer = require('../../plugins/sendMailer');
 const sqlHelper = require('../../../util/sqlHelper');
 const TABLE = require('../../../util/TABLE');
 const moment = require('../../../util/moment');
 const { LV, isGrant } = require('../../../util/level');
 
 const zip = require("node-zip");
-const { fa } = require('vuetify/es5/locale');
-const { isNumber } = require('@tiptap/vue-2');
 
 function clearShopmagField(shopmag) {
 	if (shopmag.d_date1) { shopmag.d_date1 = moment(shopmag.d_date1).format('L')};
 	if (shopmag.d_date2) { shopmag.d_date2 = moment(shopmag.d_date2).format('L')};
+}
+
+function converDateField(data, cols) {
+	Object.keys(data).forEach((key, idx) => {
+		// console.log(key,  idx);
+		// 
+		cols.forEach((col) => {
+			if (key == col) {
+				if (data[key]) data[key] = moment(data[key]).format('LT');
+			}
+		});
+	});
+	return data;	
 }
 const shopinfoModel = {
 	async getShopMag(req) {
@@ -163,6 +173,34 @@ const shopinfoModel = {
 		return row.affectedRows > 0 ;
 	},
 
+	// 스마트공방 신청/등록
+	async checkShopinfo(req) {
+		const sql1 = "select i_shop from tb_shopmag where  now() between d_date1 and d_date2";
+    	const [[shop]] = await db.execute(sql1);		
+		return shop;
+	},
+	async ShopinfoDetail(req) {
+		const { i_shop, i_id } = req.query;
+		const sql = sqlHelper.SelectSimple(TABLE.SHOPINPUT, {i_shop, i_id});
+		const [rows] = await db.execute(sql.query, sql.values);
+
+		//converDateField\
+		rows.forEach((row) => {
+            row = converDateField(row, ['d_persioninfo', 'd_argee']);
+        });
+		
+		return rows;
+	},
+	async ShopinfoUpdate(req) {
+		payload = { ...req.body,};
+		payload.d_persioninfo = moment().format('LT');
+
+		const sql = sqlHelper.InsertOrUpdate(TABLE.SHOPINPUT, payload);
+		const [row] = await db.execute(sql.query, sql.values);
+
+		return row;
+	},
+
 	// 첨부파일 Upload
 	async attfilesupload(req) {
 		const token = req.cookies.token;
@@ -172,8 +210,6 @@ const shopinfoModel = {
 		};
 		delete payload.f_yn;
 
-		// console.log(payload);
-		
 		const { i_shop, i_ser, f_yn, n_filename, i_no, t_att, f_del } = payload;		
 		const makeFolder = (dir) => {
 			if( !fs.existsSync(dir) )  { 				
