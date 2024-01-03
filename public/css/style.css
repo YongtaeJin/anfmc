@@ -303,17 +303,21 @@ table.type07 {
   }
   
 
-  .red2 {
+.red2 {
 	font-size: 30;
 	color: red;
-  }
-  .green2 {
+}
+.green2 {
 	font-size: 10;
 	color: green;
-  }
-  .blue2 {
+}
+.blue2 {
 	color: blue;
-  }
+}
+.green2_2 {
+	font-size:  0.7rem; /* 글자 크기 */
+	color: green;
+}
 
 .center-align-red {
 	color: red;

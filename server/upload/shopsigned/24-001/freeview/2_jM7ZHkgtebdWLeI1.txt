@@ -1,0 +1,82 @@
+-- Table: log202312
+
+-- DROP TABLE log202312;
+
+CREATE TABLE log202312
+(
+  log_seq serial NOT NULL,
+  reg_date_client timestamp without time zone NOT NULL,
+  reg_date_server timestamp without time zone NOT NULL,
+  reg_date character(8) NOT NULL,
+  doc_id character varying(64) NOT NULL,
+  doc_key character varying(256) NOT NULL,
+  rule_name character varying(50) NOT NULL,
+  user_id character varying(20) NOT NULL,
+  user_name character varying(50) NOT NULL,
+  user_duty character varying(50) NOT NULL,
+  dept_id character varying(20) NOT NULL,
+  dept_name character varying(250) NOT NULL,
+  job character varying(50) NOT NULL,
+  signdata character varying(300) NOT NULL,
+  cert_info character varying(50) NOT NULL,
+  pc_info character varying(128) NOT NULL,
+  filename character varying(270) NOT NULL,
+  filesize character varying(20) NOT NULL,
+  ext_info character varying(1500) NOT NULL,
+  appname character varying(255) NOT NULL,
+  lcc_enmethod character varying(20) NOT NULL,
+  lcc_decmode character(2) NOT NULL,
+  lcc_rulemode character varying(20) NOT NULL,
+  lcc_wmmode character varying(10) NOT NULL
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE log202312
+  OWNER TO puzzle_user;
+
+-- Index: ix_log202312_deptname
+
+-- DROP INDEX ix_log202312_deptname;
+
+CREATE INDEX ix_log202312_deptname
+  ON log202312
+  USING btree
+  (dept_name COLLATE pg_catalog."default", reg_date COLLATE pg_catalog."default");
+
+-- Index: ix_log202312_export
+
+-- DROP INDEX ix_log202312_export;
+
+CREATE INDEX ix_log202312_export
+  ON log202312
+  USING btree
+  (job COLLATE pg_catalog."default", dept_id COLLATE pg_catalog."default", dept_name COLLATE pg_catalog."default");
+
+-- Index: ix_log202312_filename
+
+-- DROP INDEX ix_log202312_filename;
+
+CREATE INDEX ix_log202312_filename
+  ON log202312
+  USING btree
+  (filename COLLATE pg_catalog."default", reg_date COLLATE pg_catalog."default");
+
+-- Index: ix_log202312_userid
+
+-- DROP INDEX ix_log202312_userid;
+
+CREATE INDEX ix_log202312_userid
+  ON log202312
+  USING btree
+  (user_id COLLATE pg_catalog."default", reg_date COLLATE pg_catalog."default");
+
+-- Index: ix_log202312_username
+
+-- DROP INDEX ix_log202312_username;
+
+CREATE INDEX ix_log202312_username
+  ON log202312
+  USING btree
+  (user_name COLLATE pg_catalog."default", reg_date COLLATE pg_catalog."default");
+

@@ -48,6 +48,19 @@ router.post('/ShopinfoUpdate', async (req, res)=> {
 	const result = await modelCall(shopinfoModel.ShopinfoUpdate, req);
 	res.json(result);
 }),
+router.post('/ShopComUpdate', async (req, res)=> {
+	const result = await modelCall(shopinfoModel.ShopComUpdate, req);
+	res.json(result);
+}),
+router.get('/ShopAttFiles', async (req, res)=> {
+	const result = await modelCall(shopinfoModel.ShopAttFiles, req);
+	res.json(result);
+}),
+router.get('/ShopAttFilesAdd', async (req, res)=> {
+	const result = await modelCall(shopinfoModel.ShopAttFilesAdd, req);
+	res.json(result);
+}),
+
 
 // 첨부파일 upload
 router.patch('/attfiles/upload', async (req, res)=> {	
@@ -55,7 +68,7 @@ router.patch('/attfiles/upload', async (req, res)=> {
 	res.json(result);
 }),
 // 첨부파일 delete
-router.delete('/attfiles/delete/:i_shop/:i_no/:i_ser', async(req, res)=>{
+router.delete('/attfiles/delete/:i_shop/:i_id/:i_ser', async(req, res)=>{
 	const result = await modelCall(shopinfoModel.attfilesdelete, req);
 	res.json(result);
 });

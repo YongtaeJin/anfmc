@@ -52,9 +52,9 @@ export default {
     name: "SignedP02Form",
     props: {
         item: {
-            type: Object,
-            default: null,
-        },
+            type: Array,
+        }
+           
     },
     data() {
         return {
@@ -96,10 +96,10 @@ export default {
     methods: {
         init() {
             if (this.item) {
-            this.form = deepCopy(this.item);
+                this.form = deepCopy(this.item[0]);
             }
         },
-        async save() {
+        async save() {            
             this.$emit("save", this.form);
         }
     }

@@ -81,8 +81,7 @@ export default {
         }
     },
     methods: {
-        init() {            
-            
+        init() {
             if (this.item.length) {                
                 this.form.i_shop = this.item[0].i_shop;
                 this.form.i_id = this.item[0].i_id;

@@ -14,7 +14,7 @@
             <v-tabs-items v-model="tabs">
                 <v-tab-item><signed-p-01-form @save="save1" :i_shop=shopchk.i_shop :item=shopinfo :f_chk=shopinfo[0]?.f_persioninfo></signed-p-01-form></v-tab-item>
                 <v-tab-item><signed-p-02-form @save="save2" :item=shopinfo></signed-p-02-form></v-tab-item>
-                <v-tab-item>3</v-tab-item>
+                <v-tab-item><signed-p-03-form @save="save3" :items=shioinfofiles></signed-p-03-form> </v-tab-item>
                 <v-tab-item>4</v-tab-item>
             </v-tabs-items>
         </v-card-text>
@@ -26,8 +26,9 @@
 import qs from "qs";
 import SignedP01Form from './shop_form/SignedP01Form.vue';
 import SignedP02Form from './shop_form/SignedP02Form.vue';
+import SignedP03Form from './shop_form/SignedP03Form.vue';
 export default {
-  components: { SignedP01Form, SignedP02Form },
+  components: { SignedP01Form, SignedP02Form, SignedP03Form },
     name :"ShopSigned",
 	data() {
         return {
@@ -42,6 +43,8 @@ export default {
             ],
             shopchk: [],
             shopinfo: [],
+            shioinfofiles: [],
+            shopinfofilesadd: [],
         }
     },
     beforeCreate() {        
@@ -90,6 +93,10 @@ export default {
             if (this.shopinfo) {
                 // 개인정보 동의 후 회사정보  tab으로 이동 처리
                 this.f_chk = this.shopinfo[0]?.f_persioninfo;
+                if (this.SHOPCHK) {
+                    this.shioinfofiles = await this.$axios.get(`/api/shopinfo/ShopAttFiles?${query}`);
+                    this.shioinfofilesadd = await this.$axios.get(`/api/shopinfo/ShopAttFilesAdd?${query}`);
+                }
             }
                 
         },
@@ -103,10 +110,17 @@ export default {
             }
         },
         async save2(form) {
-            console.log(form)
+            const data = await this.$axios.post(`/api/shopinfo/ShopComUpdate`, form)
+            if (data) {
+                this.$toast.info(`회사정보 내용을 저장 하였습니다.`);
+            }
         },
-        async save3(form) {
-            console.log(form)
+        async save3(item, data) {
+            const rv = await this.$axios.patch(`/api/shopinfo/attfiles/upload`, item);
+            if ( rv ) {
+                data.n_file2 = data.t_att;
+                data.f_noact = data.f_noact == 'N' ? 'R' : data.f_noact ? data.f_noact : 'I';
+            }
         },
         async save4(form) {
             console.log(form)
