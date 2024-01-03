@@ -6,6 +6,7 @@
             <template v-slot:item="{ item, expand, isExpanded }">
                 <tr :class="{ 'row_select': item === selected }" class="center-align" @click="selectItem(item)">
                     <td align=center :class="{red2: item.f_yn==1, green2: item.f_yn == 0}">{{f_ynchk(item.f_yn)}} </td>
+                    <td align=left :class="{red2: item.f_yn==1, green2: item.f_yn == 0}">{{ item.n_nm}} </td>
                     <td align=center>
                         <v-btn v-if="item.t_sample" x-small fab  @dblclick="downLoad(item)"> <v-icon>mdi-note</v-icon> </v-btn>
                     </td>
@@ -30,8 +31,8 @@
                 </tr>
             </template>
             <template v-slot:expanded-item="{ headers, item }">
-                <td :colspan="2"> </td>
-                <td :colspan="headers.length - 2" class="green2_2">{{ item.t_remark }} </td>
+                <td :colspan="3"> </td>
+                <td :colspan="headers.length - 3" class="green2_2">{{ item.t_remark }} </td>
             </template>
         </v-data-table>
         <!-- <br /><br />
@@ -72,7 +73,8 @@ export default {
             },
             headers: [                
                 { text: '필수', value: 'f_yn', sortable: false, width: "60px", fixed: true, align:'center'},
-                { text: '양식', value: 'f_sample', sortable: false, width: "60px", fixed: true, align:'center'},
+                { text: '명칭', value: 'n_nm', sortable: false, align:'center', width: "100px" },
+                { text: '양식', value: 'f_sample', sortable: false, width: "60px", fixed: true, align:'center'},                
                 { text: '첨부서류', value: 'n_filename', sortable: false, align:'center', width: "200px" },                
                 { text: '확인', value: 'f_noact', sortable: false, align:'center', width: "55px"},
                 { text: '파일명', value: 'n_file2', sortable: false, align:'center', },

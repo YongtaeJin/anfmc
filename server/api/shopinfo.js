@@ -60,6 +60,10 @@ router.get('/ShopAttFilesAdd', async (req, res)=> {
 	const result = await modelCall(shopinfoModel.ShopAttFilesAdd, req);
 	res.json(result);
 }),
+router.get('/ShopAttFilesArgee', async (req, res)=> {
+	const result = await modelCall(shopinfoModel.ShopAttFilesArgee, req);
+	res.json(result);
+}),
 
 
 // 첨부파일 upload

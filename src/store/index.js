@@ -82,15 +82,7 @@ const store = new Vuex.Store({
 					newTab : false,
 					subItems : []
 				},
-				{
-					title : "스마트공방 협약신청",
-					icon : "mdi-store-plus",
-					to : '/shop/agree',
-					com : "FMCREG",
-					grant : 2, 
-					newTab : false,
-					subItems : []
-				},
+				
 
 				// {
 				// 	title : "Home",

@@ -217,7 +217,7 @@ const shopinfoModel = {
 		const f_gubun = '1';
 		const sql = { query: "",  values: [] }
 
-		sql.query = `select a.i_shop, a.i_ser, a.f_yn, a.n_file n_filename, a.f_gubun, \n `
+		sql.query = `select a.i_shop, a.i_ser, a.f_yn, a.n_nm, a.n_file n_filename, a.f_gubun, \n `
 			 	  +	`       b.i_id, null n_file, b.n_file n_file2, b.t_att, b.f_noact, a.t_remark, a.t_sample, a.t_filenm t_samplefile, '0' f_job \n `
 			 	  +	`  from tb_shopmag_file a \n `
 			 	  +	`		left outer join tb_shopinput_file b on a.i_shop = b.i_shop and a.i_ser = b.i_ser and b.i_id = ? \n`
@@ -240,7 +240,28 @@ const shopinfoModel = {
 		const f_gubun = '2';
 		const sql = { query: "",  values: [] }
 
-		sql.query = `select a.i_shop, a.i_ser, a.f_yn, a.n_file n_filename, a.f_gubun, \n `
+		sql.query = `select a.i_shop, a.i_ser, a.f_yn, a.n_nm, a.n_file n_filename, a.f_gubun, \n `
+			 	  +	`       b.i_id, null n_file, b.n_file n_file2, b.t_att, b.f_noact, a.t_remark, a.t_sample, a.t_filenm t_samplefile, '0' f_job \n `
+			 	  +	`  from tb_shopmag_file a \n `
+			 	  +	`		left outer join tb_shopinput_file b on a.i_shop = b.i_shop and a.i_ser = b.i_ser and b.i_id = ?  \n`
+			 	  +	`  where a.i_shop = ? \n `
+				  + `    and a.f_gubun = ? \n`  				  
+			 	  +	`  order by a.i_shop, a.i_ser `;
+		sql.values.push(i_id);
+		sql.values.push(i_shop);
+		sql.values.push(f_gubun);		
+		const [rows] = await db.execute(sql.query, sql.values);	
+		
+		return rows;
+	},
+	async ShopAttFilesArgee(req) {
+		payload = { ...req.query,};
+		
+		const { i_shop, i_id } = payload;
+		const f_gubun = '3';
+		const sql = { query: "",  values: [] }
+
+		sql.query = `select a.i_shop, a.i_ser, a.f_yn, a.n_nm, a.n_file n_filename, a.f_gubun, \n `
 			 	  +	`       b.i_id, null n_file, b.n_file n_file2, b.t_att, b.f_noact, a.t_remark, a.t_sample, a.t_filenm t_samplefile, '0' f_job \n `
 			 	  +	`  from tb_shopmag_file a \n `
 			 	  +	`		left outer join tb_shopinput_file b on a.i_shop = b.i_shop and a.i_ser = b.i_ser and b.i_id = ?  \n`

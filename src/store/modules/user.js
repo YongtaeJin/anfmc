@@ -28,16 +28,16 @@ export const mutations = {
 };
 export const getters = {
 	isAdmin(state) {
-		return state.member && state.member.i_level >= LV.ADMIN;
+		return state.member && state.member?.i_level >= LV.ADMIN;
 	},
 	isSuperMag(state) {
-		return state.member && state.member.i_level == LV.SUPER && state.member.i_id == "freeview";
+		return state.member && state.member?.i_level == LV.SUPER && state.member?.i_id == "freeview";
 	},
 	isSuper(state) {
-		return state.member && state.member.i_level >= LV.SUPER;
+		return state.member && state.member?.i_level >= LV.SUPER;
 	},	
 	GRANT(state) {
-		return state.member ? state.member.i_level : 2 ;
+		return state.member ? state.member?.i_level : 2 ;
 	} ,
 };
 export const actions = {

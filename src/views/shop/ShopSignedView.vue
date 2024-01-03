@@ -9,13 +9,15 @@
             <v-tab value="tbapage_2" style="flex: 1">회사 정보</v-tab>
             <v-tab value="tbapage_3" style="flex: 1">스마트공방 신청</v-tab>
             <v-tab value="tbapage_4" style="flex: 1">회사 추가 정보</v-tab>
+            <v-tab value="tbapage_5" style="flex: 1">협약서 서류</v-tab>
         </v-tabs>
         <v-card-text>
             <v-tabs-items v-model="tabs">
                 <v-tab-item><signed-p-01-form @save="save1" :i_shop=shopchk.i_shop :item=shopinfo :f_chk=shopinfo[0]?.f_persioninfo></signed-p-01-form></v-tab-item>
                 <v-tab-item><signed-p-02-form @save="save2" :item=shopinfo></signed-p-02-form></v-tab-item>
                 <v-tab-item><signed-p-03-form @save="save3" :items=shioinfofiles></signed-p-03-form> </v-tab-item>
-                <v-tab-item>4</v-tab-item>
+                <v-tab-item><signed-p-03-form @save="save4" :items=shioinfofilesadd></signed-p-03-form> </v-tab-item>
+                <v-tab-item><signed-p-03-form @save="save5" :items=shopargeefiles></signed-p-03-form> </v-tab-item>
             </v-tabs-items>
         </v-card-text>
     </v-container>
@@ -40,11 +42,13 @@ export default {
                 {id:'Cominfo', name:'회사 정보', enable:'Y'},
                 {id:'Input', name:'스마트공방 신청', enable:'Y'},
                 {id:'Addinfo', name:'회사 추가 정보', enable:'Y'},
+                {id:'Argee', name:'협약서 서류', enable:'Y'},
             ],
             shopchk: [],
             shopinfo: [],
             shioinfofiles: [],
             shopinfofilesadd: [],
+            shopargeefiles: [],
         }
     },
     beforeCreate() {        
@@ -96,6 +100,7 @@ export default {
                 if (this.SHOPCHK) {
                     this.shioinfofiles = await this.$axios.get(`/api/shopinfo/ShopAttFiles?${query}`);
                     this.shioinfofilesadd = await this.$axios.get(`/api/shopinfo/ShopAttFilesAdd?${query}`);
+                    this.shopargeefiles = await this.$axios.get(`/api/shopinfo/ShopAttFilesArgee?${query}`);
                 }
             }
                 
@@ -122,8 +127,19 @@ export default {
                 data.f_noact = data.f_noact == 'N' ? 'R' : data.f_noact ? data.f_noact : 'I';
             }
         },
-        async save4(form) {
-            console.log(form)
+        async save4(item, data) {
+            const rv = await this.$axios.patch(`/api/shopinfo/attfiles/upload`, item);
+            if ( rv ) {
+                data.n_file2 = data.t_att;
+                data.f_noact = data.f_noact == 'N' ? 'R' : data.f_noact ? data.f_noact : 'I';
+            }
+        },
+        async save5(item, data) {
+            const rv = await this.$axios.patch(`/api/shopinfo/attfiles/upload`, item);
+            if ( rv ) {
+                data.n_file2 = data.t_att;
+                data.f_noact = data.f_noact == 'N' ? 'R' : data.f_noact ? data.f_noact : 'I';
+            }
         },
     }
 }
