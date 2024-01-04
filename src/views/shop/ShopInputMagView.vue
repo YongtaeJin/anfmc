@@ -23,8 +23,8 @@
                             <td @click="clickDocItem(0)" :class="{greencol: item.chk1=='Y', redcol: item.chk1 != 'Y'}"> {{ datachk(item.chk1) }} </td>
                             <td @click="clickDocItem(1)" :class="{greencol: item.chk2=='Y', redcol: item.chk2 != 'Y'}"> {{ datachk(item.chk2) }} </td>
                             <td @click="clickDocItem(2)" :class="{greencol: item.chk3=='Y', redcol: item.chk3 != 'Y'}"> {{ datachk(item.chk3) }} </td>
-                            <td  :class="{greencol: item.f_dochk=='Y', redcol: item.f_dochk != 'Y'}"> <u>{{ datachk2(item.f_dochk) }}</u> </td>
-                            <td  :class="{greencol: item.f_enarachk=='Y', redcol: item.f_enarachk != 'Y'}"> <u>{{ datachk2(item.f_enarachk) }}</u> </td>
+                            <td @dblclick="f_dochk(item)" :class="{greencol: item.f_dochk=='Y', redcol: item.f_dochk != 'Y'}"> <u>{{ datachk2(item.f_dochk) }}</u> </td>
+                            <td @dblclick="f_enarachk(item)" :class="{greencol: item.f_enarachk=='Y', redcol: item.f_enarachk != 'Y'}"> <u>{{ datachk2(item.f_enarachk) }}</u> </td>
                         </tr>
                     </template>
 
@@ -59,16 +59,23 @@
                         </v-card-text>
                     </v-tab-item>
                     <v-tab-item>
-                        <shop-input-mag-file-form :fileLists=fileAddsA></shop-input-mag-file-form>
+                        <shop-input-mag-file-form @process="saveDocProcess"  @mailSend="mailSend" :fileLists=fileAddsA :companyName=selected1?.n_company></shop-input-mag-file-form>
                     </v-tab-item>
                     <v-tab-item>
-                        <shop-input-mag-file-form :fileLists=fileAddsB></shop-input-mag-file-form>
+                        <shop-input-mag-file-form @process="saveDocProcess"  @mailSend="mailSend" :fileLists=fileAddsB :companyName=selected1?.n_company></shop-input-mag-file-form>
                     </v-tab-item>
                 </v-tabs-items> 
                 
             </v-col>
             
         </v-row>
+        <tiptab-mail label="메일발송" 
+            :body_content= "this.mailinfo.body" 
+            :mail_title = "this.mailinfo.title"
+            :itemInput = "this.itemInput"
+            ref="dialog" max-width="900" max-height="1300"  persistent @onSend="sendMail" >
+        </tiptab-mail>
+        <ez-dialog-2 label="처리중" ref="ez_wait" max-width="200" persistent color="primary" ></ez-dialog-2>
     </v-container>
 </template>
 
@@ -76,9 +83,11 @@
 
 import ShopInputMagFileForm from './shop_form/ShopInputMagFileForm.vue';
 import TooltipBtn from '@/components/etc/TooltipBtn.vue';
+import EzDialog2 from '@/components/etc/EzDialog2.vue';
+import TiptabMail from '../../components/tiptab/TiptabMail.vue';
 export default {
-  components: { ShopInputMagFileForm, TooltipBtn },
-    name: "ShopInputMag",
+  components: { ShopInputMagFileForm, TooltipBtn, EzDialog2, TiptabMail },
+    name: "ShopInputMag",    
     data() {
         return {
             iframeHeight: 500, // 초기 높이 설정 (원하는 높이로 초기화)
@@ -96,6 +105,13 @@ export default {
             shopInputs: [], selected1: [],
             itemInput: null,
             fileAddsA: [], fileAddsB: [],
+            mailinfo: {
+                title: "",
+                to_email: "",
+                cc_email: "",
+                body: "",
+            },
+            mailBody: "",
         }
     },
     beforeCreate() {        
@@ -162,7 +178,80 @@ export default {
         },
         clickDocItem(col) {
             this.tabs = col;    
-        }
+        },
+        async mailSend() { 
+            // 메일 팝업차 뛰우기 --> sendMail 호출
+            let body = "<p>상기 제목 관련 하여 아래와 같이 첨부 서류 확인 결과 전달 드립니다.</p><p>";
+            if (this.tabs === 1) {
+                this.mailinfo.title = "스마트공방 신청 서류 확인 안내";
+                body = body + "공방 신청 서류</p>" + await this.makeBody(this.fileAddsA);
+            } else if (this.tabs === 2) {
+                this.mailinfo.title = "스마트공방 추가 서류 확인 안내";
+                body = body + "공방 추가 서류</p>" + await this.makeBody(this.fileAddsB);
+            }
+            this.mailinfo.body = body;
+            this.$refs.dialog.open();
+        },
+
+        async sendMail(title, tomail, ccmail, html) {
+            // 메일 작성 내용 저장 및 메일 발송
+            this.$refs.ez_wait.open();
+            this.mailinfo.title = title;
+            this.mailinfo.to_email = tomail;
+            this.mailinfo.cc_email = ccmail;
+            this.mailinfo.body = html;
+            
+            const data = await this.$axios.post(`/api/shopinfo/postMailSend`,this.form);
+            this.$refs.ez_wait.close();
+            if (data == "ok") {
+                this.$ezNotify.alert("정상적으로 메일 발송 하였습니다..... ", "성공");
+                this.$refs.dialog.close();
+            }            
+        },
+        async makeBody(items) {
+            let body = ""
+            items.forEach((data) => {
+                let n_status = data.f_noact=='Y' ? "접수" : data.f_noact=='N' ? "반려" : data.f_noact=='I' ? '검토' : data.f_noact=='R' ? '검토' : '미등록';
+			    body = body + `<p>${data.f_noact=='Y'?'':'<span style="color:red"'}>${data.n_filename} : 서류${n_status}${data.f_noact=='Y'?'':'</span>'}</p>`;		        
+            });
+            body = body + `<p>반려된 첨부서류에 대해서 재 등록 부탁 드립니다.</p>`;
+		    body = body + `<p></p>감사 합니다.`
+            return body;
+        },
+
+        async f_dochk(item) {
+            const res = await this.$ezNotify.confirm("처리 하시겠습니까  ?", "공방서류");
+            if (res ) {
+                if (item.f_dochk == "Y") {
+                    item.f_dochk  = 'N' ;
+                } else {
+                    item.f_dochk  = 'Y' ;
+                } 
+                // console.log(item)
+                const data = await this.$axios.post(`/api/shopinfo/ShopInputMagDocChk`, item);               
+            }             
+        },
+        async f_enarachk(item) {
+            const res = await this.$ezNotify.confirm("처리 하시겠습니까  ?", "이나라도움 등록");
+            if (res ) {
+                if (item.f_enarachk == "Y") {
+                    item.f_enarachk  = 'N' ;
+                } else {
+                    item.f_enarachk  = 'Y' ;
+                    const data = await this.$axios.post(`/api/shopinfo/ShopInputMageNaraChk`, item);
+                    // const data = await this.$axios.patch(`/api/shopinfo/getShopInputMag?i_shop=${item.i_shop}&i_no=${item.i_no}&f_enarachk=${item.f_enarachk}`);
+                }           
+            }
+        },
+
+        async saveDocProcess(item) {
+            for (let ob in item) {
+                if(item[ob].f_edit == '1') {
+                    // console.log(item[ob])
+                    const data = this.$axios.post(`/api/shopinfo/ShopInputMag2Save`, item[ob]);
+                }
+            }
+        },
     },
 
 }

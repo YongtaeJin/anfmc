@@ -5,6 +5,7 @@ const db = require('../../plugins/mysql');
 const jwt = require('../../plugins/jwt');
 const sqlHelper = require('../../../util/sqlHelper');
 const TABLE = require('../../../util/TABLE');
+const sendMailer = require('../../plugins/sendMailer');
 const moment = require('../../../util/moment');
 const { LV, isGrant } = require('../../../util/level');
 
@@ -396,15 +397,16 @@ const shopinfoModel = {
 		return file;
 	},
 	async getFileDownZip(req, res) {
-		const { i_shop, i_no, f_gubun, f_filetype } = req.query;
+		// console.log(req.query)
+		const { i_shop, i_id, f_gubun, f_filetype } = req.query;
 		let fPath = `${SERVER_PATH}` ;
 		var t_path = "";
-		// D:/WEBAPP/protagonist/server/upload/shopsigned/23-001/freeview/2_afUOwFG3RaccbLph.xlsx
-		let sql = "select a.n_file, a.t_att, b.n_file n_title " +
+		
+		let sql = "select a.n_file, a.t_att, b.n_nm n_title " +
 		          " from tb_shopinput_file  a " +
 				  "      join tb_shopmag_file b on a.i_shop = b.i_shop and a.i_ser = b.i_ser and b.f_gubun = '" + f_gubun + "'" +
 				  " where a.i_shop = '" + i_shop + "' "+
-				  "   and a.i_no = " + i_no ;
+				  "   and a.i_id = '" + i_id + "'";
 		const [files] = await db.execute(sql); 
 
 		//  console.log(files);
@@ -514,8 +516,8 @@ const shopinfoModel = {
 	},
 	async getShopInputMag2(req) {
 		const {i_shop, i_id, f_gubun } = req.body;
-		const sql = "select a.i_shop, a.i_ser, a.f_gubun, a.f_yn, a.n_file n_filename, " +
-					"       c.i_id, b.n_file, b.t_att, b.f_noact " +
+		const sql = "select a.i_shop, a.i_ser, a.f_gubun, a.f_yn, a.n_nm n_filename, " +
+					"       c.i_id, b.n_file, b.t_att, b.f_noact, '0' f_edit " +
 					"  from tb_shopmag_file a " +
 					"       left outer join tb_shopinput c on a.i_shop = c.i_shop and c.i_id = '" + i_id + "'" +
 					"       left outer join tb_shopinput_file b on a.i_shop = b.i_shop and a.i_ser = b.i_ser and c.i_id = b.i_id " +
@@ -524,6 +526,93 @@ const shopinfoModel = {
 					" order by a.i_shop, a.i_ser ";	
 		const [row] = await db.execute(sql);		
        	return row;
+	},
+	async ShopInputMagDocChk(req) {
+		const { i_shop, i_id, f_dochk, f_enarachk, f_argeechk } = req.body;
+		const at = moment().format('LT');
+		const sql = { query: "",  values: [] }
+		sql.query = `update tb_shopinput set f_dochk = ?, d_dochk = now() where i_shop = ? and i_id = ?`
+		sql.values.push(f_dochk);
+		sql.values.push(i_shop);
+		sql.values.push(i_id);
+		const [row] = await db.execute(sql.query, sql.values);
+		return row;
+	},
+	async ShopInputMageNaraChk(req) {
+		const { i_shop, i_id, f_dochk, f_enarachk, f_argeechk } = req.body;
+		const at = moment().format('LT');
+		const sql = { query: "",  values: [] }
+		sql.query = `update tb_shopinput set f_enarachk = ?, d_enarachk = now() where i_shop = ? and i_id = ?`
+		sql.values.push(f_enarachk);
+		sql.values.push(i_shop);
+		sql.values.push(i_id);
+		const [row] = await db.execute(sql.query, sql.values);
+		return row;
+	},
+	async ShopInputMagArgeeChk(req) {
+		const { i_shop, i_id, f_dochk, f_enarachk, f_argeechk } = req.body;
+		const at = moment().format('LT');
+		const sql = { query: "",  values: [] }
+		sql.query = `update tb_shopinput set f_argeechk = ?, d_argee = now() where i_shop = ? and i_id = ?`
+		sql.values.push(f_argeechk);
+		sql.values.push(i_shop);
+		sql.values.push(i_id);
+		const [row] = await db.execute(sql.query, sql.values);
+		return row;
+	},
+
+
+	async shopgetEmail(req) {
+		const { gubun, i_shop, i_id } = req.query;
+		let sql = "";
+		if (gubun == 'S') {
+			sql = "select i_email to_email from tb_shopinput where i_shop = '" + i_shop+ "' and i_id = '" + i_id + "'";
+		} else if (gubun == 'TOKEN') {
+			const token = req.cookies.token;
+			const { i_id } = jwt.vetify(token);
+			sql = "select e_email to_email from tb_members where i_id = '" + i_id + "'";
+		} else {
+			sql = "select e_email to_email from tb_members where i_id = '" + i_id + "'";
+		}		
+		const [row] = await db.execute(sql);
+       	return row;	
+	},
+	async postMailSend(req) {
+		const title = 'ANFMC';		
+		const payload = {
+			...req.body,
+		};
+		try {		
+			const tb_mailsend = {
+				e_to: payload.to_email,
+				e_cc: payload.cc_email,
+				t_subject: payload.title,
+				t_content: payload.body,
+				d_crdt: moment().format('LT'),
+			}
+			await sendMailer(`스마트공방 관리자`, payload.to_email, payload.cc_email, payload.title, payload.body);
+			// const smSql = sqlHelper.Insert('tb_mailsend', tb_mailsend);
+			// await db.execute(smSql.query, smSql.values);
+			
+		} catch (e) {
+			console.log(e);
+			return { err: `email 발송에 필패 하였습니다.\n관리자에게 문의 주세요.` }
+		}
+       	return 'ok';
+	},
+
+	async ShopInputMag2Save(req) {		
+		const { i_shop, i_id, i_ser, f_noact } = req.body;	
+		const sql = { query: "",  values: [] }
+
+		sql.query = `update tb_shopinput_file set f_noact = ? where i_shop = ? and i_id = ? and i_ser = ?`;
+		sql.values.push(f_noact);
+		sql.values.push(i_shop);
+		sql.values.push(i_id);
+		sql.values.push(i_ser);
+		
+		const [row] = await db.execute(sql.query, sql.values);
+       	return row;	
 	}
 }
 

@@ -2,10 +2,11 @@
   <v-dialog v-model="dialog" v-bind="$attrs">
     <v-card>
       <v-toolbar color="primary" density="compact" class="elevation-4">
-        <v-toolbar-title>{{ label }}</v-toolbar-title>  
-        <v-spacer></v-spacer>
-        <v-btn v-if="this.itemInput.i_userid" color="primary" class="col-md-1" @click="send">메일발송</v-btn>
-        <v-btn dark  class="col-md-1 ml-10" @click="close">닫기</v-btn>      
+        <v-toolbar-title>{{ mail_title }} 메일</v-toolbar-title>  
+        <v-spacer/><v-spacer/><v-spacer/>
+        <v-btn v-if="this.itemInput?.i_id" color="primary"  @click="send">메일발송</v-btn>
+        <v-spacer/>
+        <v-btn dark   @click="close">닫기</v-btn>      
       </v-toolbar>
       <table>
         <tr>
@@ -18,14 +19,7 @@
           <td><tooltip-btn icon label="사용자 메일" @click="getEmail('M')"><v-icon large>mdi-email-mark-as-unread</v-icon></tooltip-btn></td>
         </tr>
       </table>
-      
 
-      
-      <!-- <v-toolbar density="compact" class="elevation-20">
-        <v-text-field label="수신처 :" hide-details></v-text-field>
-        <v-text-field label="참조 :" hide-details ></v-text-field>
-      </v-toolbar> -->
-      
       <v-card-text>
         <slot></slot>
       </v-card-text>
@@ -133,15 +127,15 @@ export default {
     async getEmail(gubun) {            
       let url = null;
       if (gubun == 'U') {
-        url = `/api/shopinfo/shopgetEmail?i_userid=${this.itemInput.i_userid}&gubun=${gubun}`;
+        url = `/api/shopinfo/shopgetEmail?i_id=${this.itemInput.i_id}&gubun=${gubun}`;
       } else if (gubun == 'S') {
-        url = `/api/shopinfo/shopgetEmail?i_shop=${this.itemInput.i_shop}&i_no=${this.itemInput.i_no}&gubun=${gubun}`;
+        url = `/api/shopinfo/shopgetEmail?i_shop=${this.itemInput.i_shop}&i_id=${this.itemInput.i_id}&gubun=${gubun}`;
       } else if (gubun == 'M') {
         url = `/api/shopinfo/shopgetEmail?&gubun=TOKEN`;
       }
       if (url) {
         const data = await this.$axios.get(url);            
-        if( data ) {     
+        if( data.length ) {
           if (gubun == 'M') {
             this.ccmail = data[0].to_email;
           } else {          

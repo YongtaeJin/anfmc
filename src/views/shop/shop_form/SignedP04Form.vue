@@ -6,7 +6,7 @@
 export default {
     name: "SignedP04Form",
     props: {
-      
+        editJob: {type: Boolean, default: false}
     },
     data() {
         return {

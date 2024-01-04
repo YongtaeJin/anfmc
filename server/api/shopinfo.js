@@ -89,6 +89,31 @@ router.post('/getShopInputMag2', async (req, res)=> {
 	const result = await modelCall(shopinfoModel.getShopInputMag2, req);
 	res.json(result);
 }),
+router.post('/ShopInputMagDocChk', async (req, res)=> {
+	const result = await modelCall(shopinfoModel.ShopInputMagDocChk, req);
+	res.json(result);
+}),
+router.post('/ShopInputMagArgeeChk', async (req, res)=> {
+	const result = await modelCall(shopinfoModel.ShopInputMagArgeeChk, req);
+	res.json(result);
+}),
+router.post('/ShopInputMageNaraChk', async (req, res)=> {
+	const result = await modelCall(shopinfoModel.ShopInputMageNaraChk, req);
+	res.json(result);
+}),
+router.get('/shopgetEmail', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.shopgetEmail, req);
+	res.json(result);
+}),
+router.post('/postMailSend', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.postMailSend, req);
+	res.json(result);
+}),
+
+router.post('/ShopInputMag2Save', async (req, res)=> {	
+	const result = await modelCall(shopinfoModel.ShopInputMag2Save, req);
+	res.json(result);
+}),
 
 
 

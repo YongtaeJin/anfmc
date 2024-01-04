@@ -1,5 +1,6 @@
 <template>
     <v-form @submit.prevent="save" ref="form" v-model="valid" lazy-validation>
+        {{editJob}}
         <v-data-table :headers="headers"  :items="items" single-select  item-key="i_ser"
             :items-per-page="-1" hide-default-footer  :expanded.sync="expanded" :single-expand="singleExpand"  
             class="elevation-1 text-no-wrap">
@@ -14,12 +15,12 @@
                     <td align=center :class="{red2: item.f_noact=='N', green2: item.f_noact == 'Y'}"> {{ f_noact(item.f_noact) }} </td>
                     <td align=left> {{ item.n_file2 }} </td>
                     <td align=center>
-                        <v-file-input v-model="item.n_file" :multiple="false"
+                        <v-file-input v-if="editJob" v-model="item.n_file" :multiple="false"
                             @change="getFilename($event, item)" dense hide-input
                             color="primary accent-4" hide-details prepend-icon="mdi-file-upload" />
                     </td> 
                     <td align=center>
-                        <v-btn v-if=item.n_file2 fab x-small  @click="deleteClick(item)">
+                        <v-btn v-if="item.n_file2 && editJob" fab x-small  @click="deleteClick(item)">
                             <v-icon dark>mdi-delete-circle-outline</v-icon>
                         </v-btn>                
                     </td> 
@@ -50,6 +51,7 @@ export default {
             type: Object ,
             default: null,
         },      
+        editJob: {type: Boolean, default: false}
     },
     data() {
         return {

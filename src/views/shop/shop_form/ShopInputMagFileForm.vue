@@ -1,13 +1,13 @@
 <template>
     <v-form  ref="form">
         <v-toolbar color="#c2fad8" height="30px" >
-            <v-btn v-if="fileLists.length" color="primary" x-small>서류처리</v-btn>
+            <v-btn v-if="fileLists.length"  @click="process(fileLists)" color="primary" x-small>서류처리</v-btn>
             &nbsp;&nbsp;
-            <v-btn v-if="fileLists.length" color="primary" x-small>메일발송</v-btn>
+            <v-btn v-if="fileLists.length" @click="mailSend" color="primary" x-small>메일발송</v-btn>
             <v-spacer/>
-            <v-checkbox v-if="fileLists.length" label="서류명"  hide-details color="primary"  class="small-checkbox" ></v-checkbox>
+            <v-checkbox v-if="fileLists.length" label="서류명" v-model="f_downchk2"  hide-details color="primary"  class="small-checkbox" ></v-checkbox>
             &nbsp;
-            <v-btn v-if="fileLists.length" color="primary" x-small>일괄내려받기</v-btn>
+            <v-btn v-if="fileLists.length" color="primary" x-small  @click="alldownLoad">일괄내려받기</v-btn>
         </v-toolbar>
         <v-data-table :headers="fileHeaders" single-select :items="fileLists"
                     :items-per-page="-1" hide-default-footer class="elevation-1 text-no-wrap"  >
@@ -42,6 +42,7 @@ export default {
             type: Object,
             default: null,
         },
+        companyName: {type: String, default: null },
     },
     data() {
         return {
@@ -54,6 +55,7 @@ export default {
                 { text: 'DOWN',          value: 't_att', sortable: false, align:'center', width: "55px"},
             ],
             selected:[],
+            f_downchk1: 1, f_downchk2: 0,
         }
     },
     created() {       
@@ -74,14 +76,14 @@ export default {
         docProcess(item) {            
             if (item.f_noact) {
                 item.f_noact = item.f_noact == "Y" ? "N" : "Y";    
-                item.f_edit = true;            
+                item.f_edit = '1';
             }
         },
         selectItem (item){
             if (this.selected == item) return;
             this.selected = item;
         },
-        async process(form) {
+        async process(form) {            
             this.$emit("process", form);
         },
         async mailSend() {
@@ -109,7 +111,7 @@ export default {
             if (this.f_downchk2) { f_filetype = '2'};
            
             if (this.fileLists) {
-                const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDownZip?i_shop=${ this.fileLists[0].i_shop }&i_no=${ this.fileLists[0].i_no }&f_gubun=${ this.fileLists[0].f_gubun }&f_filetype=${f_filetype}`);
+                const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDownZip?i_shop=${ this.fileLists[0].i_shop }&i_id=${ this.fileLists[0].i_id }&f_gubun=${ this.fileLists[0].f_gubun }&f_filetype=${f_filetype}`);
                 if (fileBuffer ) {
                     save (fileBuffer, `${this.companyName}.zip`);
                     alert('File Donw load Click !!!!!'); 

@@ -3,7 +3,7 @@
         <v-toolbar height="40px" background-color="primary" dark>
             <v-toolbar-title>스마트공방 신청</v-toolbar-title>
             <v-spacer/>
-        </v-toolbar>
+        </v-toolbar>       
         <v-tabs v-model="tabs" background-color="primary" dark height="35px">
             <v-tab value="tbapage_1" style="flex: 1">개인정보 동의</v-tab>
             <v-tab value="tbapage_2" style="flex: 1">회사 정보</v-tab>
@@ -15,9 +15,9 @@
             <v-tabs-items v-model="tabs">
                 <v-tab-item><signed-p-01-form @save="save1" :i_shop=shopchk.i_shop :item=shopinfo :f_chk=shopinfo[0]?.f_persioninfo></signed-p-01-form></v-tab-item>
                 <v-tab-item><signed-p-02-form @save="save2" :item=shopinfo></signed-p-02-form></v-tab-item>
-                <v-tab-item><signed-p-03-form @save="save3" :items=shioinfofiles></signed-p-03-form> </v-tab-item>
-                <v-tab-item><signed-p-03-form @save="save4" :items=shioinfofilesadd></signed-p-03-form> </v-tab-item>
-                <v-tab-item><signed-p-03-form @save="save5" :items=shopargeefiles></signed-p-03-form> </v-tab-item>
+                <v-tab-item><signed-p-03-form @save="save3" :items=shioinfofiles :editJob=!FILECHK></signed-p-03-form> </v-tab-item>
+                <v-tab-item><signed-p-03-form @save="save4" :items=shioinfofilesadd :editJob=!FILECHK></signed-p-03-form> </v-tab-item>
+                <v-tab-item><signed-p-03-form @save="save5" :items=shopargeefiles :editJob=!ARGEE></signed-p-03-form> </v-tab-item>
             </v-tabs-items>
         </v-card-text>
     </v-container>
@@ -76,7 +76,13 @@ export default {
         },
         SHOPCHK() {
             return this.shopchk?.i_shop;
-        },  
+        },
+        FILECHK() {
+            return this.shopinfo[0]?.f_dochk == 'Y';
+        },       
+        ARGEE() {
+            return this.shopinfo[0]?.f_argeechk == 'Y' ;
+        },
     },
     methods: {
         adjustIframeHeight() {
@@ -86,14 +92,14 @@ export default {
         },
         async fetchData() {
             if (!this.FMCREG) return;
-            this.shopchk = await this.$axios.get("/api/shopinfo/checkShopinfo");
+            this.shopchk = await this.$axios.get("/api/shopinfo/checkShopinfo");            
             if (!this.shopchk) {
                 this.$toast.warning(`스마트공방 신청(등록)기간이 아닙니다.`);
                 return this.$router.push("/");
             }
 
             const query = qs.stringify({i_shop: this.shopchk.i_shop, i_id: this.$store.state.user.member?.i_id});
-            this.shopinfo = await this.$axios.get(`/api/shopinfo/ShopinfoDetail?${query}`);
+            this.shopinfo = await this.$axios.get(`/api/shopinfo/ShopinfoDetail?${query}`);            
             if (this.shopinfo) {
                 // 개인정보 동의 후 회사정보  tab으로 이동 처리
                 this.f_chk = this.shopinfo[0]?.f_persioninfo;
@@ -102,8 +108,7 @@ export default {
                     this.shioinfofilesadd = await this.$axios.get(`/api/shopinfo/ShopAttFilesAdd?${query}`);
                     this.shopargeefiles = await this.$axios.get(`/api/shopinfo/ShopAttFilesArgee?${query}`);
                 }
-            }
-                
+            }                
         },
 
         async save1(form) {

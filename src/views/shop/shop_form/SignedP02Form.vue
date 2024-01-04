@@ -34,8 +34,8 @@
             </v-col>
         </v-row>
         <v-row>
-            <v-col>
-                <v-btn  color="primary" type="submit" block> 저 장 </v-btn>
+            <v-col>               
+                <v-btn :disabled="item[0]?.f_enarachk == 'Y'" color="primary" type="submit" block> 저 장 </v-btn>
             </v-col>
         </v-row>    
   </v-form>
@@ -51,10 +51,8 @@ export default {
   components: { InputResno, InputPhone, InputPost3 },
     name: "SignedP02Form",
     props: {
-        item: {
-            type: Array,
-        }
-           
+        item: {type: Array,},
+        notEditJob: {type: String, default: 'N'}           
     },
     data() {
         return {
