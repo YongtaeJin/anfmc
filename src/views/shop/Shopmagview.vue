@@ -3,7 +3,7 @@
         <v-toolbar height="40px" background-color="primary" dark>
             <v-toolbar-title>사업관리</v-toolbar-title>
             <v-spacer/>           
-            <tooltip-btn v-if="this.tabs==0 &&  this.$store.state.user.member.i_level > 9" fab small label="사업추가" @click="addShop">
+            <tooltip-btn v-if="this.tabs==0 &&  this.$store.state.user.member?.i_level > 9" fab small label="사업추가" @click="addShop">
                 <v-icon>mdi-plus</v-icon>
             </tooltip-btn>
             <tooltip-btn v-if="this.tabs>=1" fab small label="첨부 서류 추가" @click="addFile">

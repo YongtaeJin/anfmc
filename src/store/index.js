@@ -56,7 +56,7 @@ const store = new Vuex.Store({
 						{
 							title : "사업신청관리",
 							icon : "",
-							to : '/shop/shopinputmag',							
+							to : '/shop/shopinputmag',
 							com : "FMCREG",
 							grant : 5, 
 							newTab : false,

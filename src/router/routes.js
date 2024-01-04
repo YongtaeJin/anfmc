@@ -238,6 +238,23 @@ const routes = [
 		name: 'ShopSigned',
 		component: () => import(/* webpackChunkName: "ShopSigned" */ '../views/shop/ShopSignedView.vue')
 	},
+	{
+		path: '/shop/UserList',
+		name: 'ShopUserList',
+		component: () => import(/* webpackChunkName: "ShopUserList" */ '../views/shop/ShopUserListView.vue')
+	},
+	{
+		path: '/shop/shopinputmag',
+		name: 'ShopInputMag',
+		component: () => import(/* webpackChunkName: "ShopInputMag" */ '../views/shop/ShopInputMagView.vue')
+	},
+	{
+		path: '/shop/shopargeemag',
+		name: 'ShopArgeeMag',
+		component: () => import(/* webpackChunkName: "ShopArgeeMag" */ '../views/shop/ShopArgeeMagView.vue')
+	},
+
+	
 
 	
 ]

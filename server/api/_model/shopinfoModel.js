@@ -435,6 +435,96 @@ const shopinfoModel = {
 		}
 		return ;
 	},
+
+	async ShopUserList(req) {
+		const { f_serarch } = req.query;
+
+		const sql = "select c_com, i_id, n_name, e_email, if(i_level=2,'일반', '관리자') n_level, i_password, 'N' f_del  " +
+				    "  from tb_members " +
+	   			    " where not exists (select * from tb_notuserchk t where tb_members.i_id = t.i_id) " +
+					"   and c_com = 'FMCREG'" +
+					"   and (i_id like '%" + f_serarch + "%' or n_name like '%" + f_serarch + "%' or e_email like '%" + f_serarch + "%')" +
+	   			    " order by i_id, n_name";
+		const [rows] = await db.execute(sql);
+       	return rows;		
+	},
+	async ShopUserDelete(req) {
+		const { i_id } = req.query;
+		const sql = { query: "",  values: [] }
+		sql.query = `delete from tb_members where c_com = 'FMCREG' and i_id = ?`;
+		sql.values.push(i_id);
+		const [row] = await db.execute(sql.query, sql.values);
+		
+		return row;	
+	},
+	async getShopList(req) {
+		const [row] = await db.execute(`select i_shop, n_shop from tb_shopmag order by i_shop desc`);		
+		return row;	
+	},
+	async getShopInputMag(req) {
+		const payload = { ...req.body};
+		const sql = "select a.i_shop, a.i_id, " +
+					"		coalesce(n_company, a.i_id) n_company, " +
+					"		f_persioninfo, " +
+					"		if(coalesce( " +
+					"			length(trim(i_regno)) + length(trim(n_company)) + length(trim(n_person)) + length(trim(t_tel1)) + length(trim(t_tel2)) + length(trim(i_email)) + " +
+					"			length(trim(i_presno)) + length(trim(i_post)) + length(trim(t_addr1)) + length(trim(t_addr2)) + length(trim(t_tel2)) + length(trim(f_saugup)) + " +
+					"			length(trim(f_run)) + length(trim(f_dart)) + length(trim(t_enarainfo)) + length(trim(t_enarainfopw)) " +
+					"			, 0) > 0, 'Y', 'N') chk1, " +
+					"		if(b.f_f1y = c.f_u1y, 'Y', 'N') chk2, " +
+					"		if(b.f_f2y = 0, '-', if(b.f_f2y = c.f_u2y, 'Y', 'N')) chk3, " +
+					"		if(b.f_f3y = c.f_u3y, 'Y', 'N') chk4, " +
+					"		f_dochk, " +
+					"		f_enarachk	 " +				
+					" from tb_shopinput a " +
+					"		left outer join (select i_shop,  " +
+					"								sum(case when f_gubun = '1' and f_yn = '1' then 1 else 0 end) f_f1y, " +
+					"								sum(case when f_gubun = '1' and f_yn = '0' then 1 else 0 end) f_f1n, " +
+					"								sum(case when f_gubun = '2' and f_yn = '1' then 1 else 0 end) f_f2y, " +
+					"								sum(case when f_gubun = '2' and f_yn = '0' then 1 else 0 end) f_f2n, " +
+					"								sum(case when f_gubun = '3' and f_yn = '1' then 1 else 0 end) f_f3y, " +
+					"								sum(case when f_gubun = '3' and f_yn = '0' then 1 else 0 end) f_f3n " +
+					"						from tb_shopmag_file  " +
+					"						where i_shop = '" + payload.i_shop + "' " +
+					"						group by i_shop) b on a.i_shop = b.i_shop " +
+					"		left outer join (select c2.i_shop, c2.i_id, " +
+					"								sum(case when f_gubun = '1' and f_yn = '1' and f_noact <> 'N' then 1 else 0 end) f_u1y, " +
+					"								sum(case when f_gubun = '1' and f_yn = '0' and f_noact <> 'N' then 1 else 0 end) f_u1n, " +
+					"								sum(case when f_gubun = '2' and f_yn = '1' and f_noact <> 'N' then 1 else 0 end) f_u2y, " +
+					"								sum(case when f_gubun = '2' and f_yn = '0' and f_noact <> 'N' then 1 else 0 end) f_u2n, " +
+					"								sum(case when f_gubun = '3' and f_yn = '1' and f_noact <> 'N' then 1 else 0 end) f_u3y, " +
+					"								sum(case when f_gubun = '3' and f_yn = '0' and f_noact <> 'N' then 1 else 0 end) f_u3n " +
+					"						from tb_shopmag_file c1 " +
+					"								join tb_shopinput_file c2 on  c1.i_shop = c2.i_shop and c1.i_ser = c2.i_ser " +
+					"						where c1.i_shop = '" + payload.i_shop + "' " + 
+					"						group by c2.i_shop, c2.i_id) c on a.i_shop = b.i_shop and a.i_id = c.i_id " +
+					" where a.i_shop = '" + payload.i_shop + "' " ;
+					// "   and trim(coalesce(n_company, a.i_userid)) like '" + chkf_serarch + "%'" +
+					// "   and coalesce(f_dochk, 'N') like '" + chkf_dochk + "'" +
+					// "   and coalesce(f_enarachk, 'N') like '" + chkf_enara + "'";
+		const [row] = await db.execute(sql)	
+		return row;
+	},
+	async getShopInputMag1(req) {
+		const {i_shop, i_id } = req.body;
+		const sql = sqlHelper.SelectSimple(TABLE.SHOPINPUT, {i_shop, i_id});
+
+		const [[row]] = await db.execute(sql.query, sql.values);		
+		return row;	
+	},
+	async getShopInputMag2(req) {
+		const {i_shop, i_id, f_gubun } = req.body;
+		const sql = "select a.i_shop, a.i_ser, a.f_gubun, a.f_yn, a.n_file n_filename, " +
+					"       c.i_id, b.n_file, b.t_att, b.f_noact " +
+					"  from tb_shopmag_file a " +
+					"       left outer join tb_shopinput c on a.i_shop = c.i_shop and c.i_id = '" + i_id + "'" +
+					"       left outer join tb_shopinput_file b on a.i_shop = b.i_shop and a.i_ser = b.i_ser and c.i_id = b.i_id " +
+					" where a.i_shop = '" + i_shop + "' " +
+					"   and a.f_gubun = '" + f_gubun + "'" +
+					" order by a.i_shop, a.i_ser ";	
+		const [row] = await db.execute(sql);		
+       	return row;
+	}
 }
 
 module.exports = shopinfoModel;

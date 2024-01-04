@@ -65,6 +65,32 @@ router.get('/ShopAttFilesArgee', async (req, res)=> {
 	res.json(result);
 }),
 
+router.get('/ShopUserList', async (req, res)=> {
+	const result = await modelCall(shopinfoModel.ShopUserList, req);
+	res.json(result);
+}),
+router.patch('/ShopUserDelete', async (req, res)=> {
+	const result = await modelCall(shopinfoModel.ShopUserDelete, req);
+	res.json(result);
+}),
+router.get('/getShopList', async (req, res)=> {
+	const result = await modelCall(shopinfoModel.getShopList, req);
+	res.json(result);
+}),
+router.post('/getShopInputMag', async (req, res)=> {
+	const result = await modelCall(shopinfoModel.getShopInputMag, req);
+	res.json(result);
+}),
+router.post('/getShopInputMag1', async (req, res)=> {
+	const result = await modelCall(shopinfoModel.getShopInputMag1, req);
+	res.json(result);
+}),
+router.post('/getShopInputMag2', async (req, res)=> {
+	const result = await modelCall(shopinfoModel.getShopInputMag2, req);
+	res.json(result);
+}),
+
+
 
 // 첨부파일 upload
 router.patch('/attfiles/upload', async (req, res)=> {	

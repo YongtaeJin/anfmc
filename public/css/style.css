@@ -333,3 +333,41 @@ table.type07 {
 .left-align {
 	text-align: left;
 }
+
+.redcol { color: red; }
+.greencol { color: green; }
+.bluecol { color: blue; }
+
+.type03 {
+	border-collapse: collapse;
+	text-align: left;
+	line-height: 1;
+	border-top: 1px solid #ccc;
+	border-left: 3px solid #369;
+	
+	font-size: 0.6rem;
+}
+.type03 th {
+	width: 190px;
+	padding: 10px;
+	font-weight: bold;
+	vertical-align: top;
+	color: white;
+	background: #153d73; 
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+}
+.type03 td {
+	width: 400px;
+	padding: 10px;
+	vertical-align: top;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+}
+.small-checkbox .v-label {
+	font-size: 0.7rem; /* 원하는 글자 크기로 조절 */
+	margin-left: -12px; /* 아이콘과 텍스트 사이의 간격 조절 */	
+}
+.small-checkbox .v-icon {
+	font-size: 1rem; /* 원하는 아이콘 크기로 조절 */
+}
