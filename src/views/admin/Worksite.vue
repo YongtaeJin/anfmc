@@ -6,14 +6,17 @@
             <tooltip-btn fab small label="추가" @click="addWorkSite"><v-icon>mdi-plus</v-icon></tooltip-btn>
             <tooltip-btn fab small label="조회" @click="fetchData"><v-icon>mdi-magnify</v-icon></tooltip-btn>
         </v-toolbar>
+        <!--  메인 자료 -->
         <v-data-table :headers="headers" :items="items" @dblclick:row=showRowInfo  @click:row=showWorkSiteLog
                     item-key="i_ser" single-select 
-                    :items-per-page="-1"  hide-default-footer :footer-props="{'items-per-page-options': [10, 20, 30, 40, 50, 100, -1]}" 
+                    :items-per-page="-1"  hide-default-footer
                     class="elevation-1 text-no-wrap" height="400px" max-height="400px" >
+
             <template v-slot:[`item.f_init`]="{ item }">
                <v-btn icon x-small tabindex="-1" @click="clickInit(item)"><v-icon> mdi-dialpad </v-icon></v-btn>
             </template>         
         </v-data-table>
+
         <v-toolbar height="30px" background-color="primary" dark>
             <v-toolbar-title>회사 Log Image</v-toolbar-title>
             <v-spacer/>   
@@ -24,7 +27,7 @@
         </div>
 
         <ez-dialog ref="dialog" label="사업장" persistent @onClose="closeDialog" width="500px">
-            <worksite-form :data="item" :keyCheckCom="keyCheckCom" :keyCheckId="keyCheckId" :isLoad="isLoad" @onSave="save">                
+            <worksite-form :data="item" :keyCheckCom="keyCheckCom" :keyCheckId="keyCheckId" :isLoad="isLoad" @onSave="save" @onDelete="onDelete">                
             </worksite-form>
         </ez-dialog>
         <ez-dialog ref="dialog_log" label="회사 Log Image 선택"  persistent width="400px">
@@ -97,17 +100,16 @@ export default {
             this.fetchData();
         },
         async fetchData() {
-            this.items = await this.$axios.get(`/api/system/`);
+            this.items = await this.$axios.get(`/api/system/`);            
         },
         async showRowInfo(event, { item } ) {
-            this.item = deepCopy(item); 
-            
+            this.item = deepCopy(item);             
             this.$refs.dialog.open();
         },
 
-        async showWorkSiteLog(event, { item }) {
+        async showWorkSiteLog(event, { item }) {            
             if (this.selected == item) return;
-            this.selected = item;            
+            this.selected = item;
         },
         async addWorkSite(item) {
             this.isLoad = true;
@@ -135,17 +137,30 @@ export default {
             return await this.duplicateDualCheck(payload); 
         },
         async save(form) {
-            this.isLoading = true;   
-            // console.log(this.item ? "update" : "insert")
-            if (this.item) {
-                // update
-                const data = await this.updateWorksite(form); 
-            } else {
-                // insert
-                const data = await this.insertWorksite(form); 
-            }
+            this.isLoading = true;
+            const data = this.item ? await this.updateWorksite(form) : await this.insertWorksite(form); 
+            if (data) {
+                const item = await this.$axios.get(`/api/system/?c_com=${form.c_com}`);                
+                const idx = this.items.findIndex(e => e.c_com == form.c_com);
+                if (idx >= 0) {
+                    this.items.splice(idx, 1, item[0])
+                } else {
+                    this.items.push(item[0])
+                }                
+            }            
             this.isLoading = false;   
             this.$refs.dialog.close(); 
+        },
+        async onDelete(form) {
+            this.isLoading = true;
+            const rv = await this.$axios.post(`/api/system/worksitedel`, form);
+            if ( rv ) {
+                const idx = this.items.findIndex(e => e.c_com == form.c_com);
+                if (idx >= 0 ) this.items.splice(idx, 1)
+                this.$toast.info(`삭제 하였습니다...`);
+            }
+            this.isLoading = false;
+            this.$refs.dialog.close();
         },
         async clickInit(item) {
             const res = await this.$ezNotify.confirm("<br>공통코드 초기화 하시겠습니까 ?<br>이전 자료는 삭제 처리.... ", `${item.n_com}`, {icon: "mdi-message-bulleted-off", width: 400,});
@@ -160,11 +175,10 @@ export default {
             }
         },
         
-        async clickLogImage() {
+        async clickLogImage() {            
             this.$refs.dialog_log.open();
         },
-        async saveimgage(rv) {
-            
+        async saveimgage(rv) {            
             if (rv.length > 0) {
                 this.selected.t_worklog = rv;
                 this.$toast.info(`저장 하였습니다. `);

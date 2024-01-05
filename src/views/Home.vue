@@ -54,7 +54,7 @@ export default {
 	
   methods: {
     async init() {
-      const query = qs.stringify({c_com: this.$store.state.user.member.c_com});            
+      const query = qs.stringify({c_com: this.$store.state.user.member.c_com});
       this.data = await this.$axios.get(`/api/system/getNoticeCom?${query}`);
       
       if (this.data.length) {

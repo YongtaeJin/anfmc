@@ -28,6 +28,10 @@ router.patch('/', async (req, res) => {
 	const result = await modelCall(systemModel.updateWorksite, req);
 	res.json(result);
 });
+router.post('/worksitedel', async (req,res) => {
+	const result = await modelCall(systemModel.worksitedel, req);
+	res.json(result);
+});
 
 // 사업장별 사용자 관리
 router.get('/worksiteusers', async (req, res) => {

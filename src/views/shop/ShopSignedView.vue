@@ -92,7 +92,7 @@ export default {
         },
         async fetchData() {
             if (!this.FMCREG) return;
-            this.shopchk = await this.$axios.get("/api/shopinfo/checkShopinfo");            
+            this.shopchk = await this.$axios.get("/api/shopinfo/checkShopinfo");
             if (!this.shopchk) {
                 this.$toast.warning(`스마트공방 신청(등록)기간이 아닙니다.`);
                 return this.$router.push("/");

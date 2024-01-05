@@ -149,6 +149,7 @@ const memberModel = {
 		const [row] = await db.execute(sql.query, sql.values);
 		return await memberModel.getMemberBy({c_com, i_id});
 	},
+	//////////////////////////////////////// Login Checked ///////////////////////////////////////////
 	async getMemberBy(form, cols = []) {		
 		const { p_idcom } = form;		
 		if (p_idcom) {

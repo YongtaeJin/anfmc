@@ -39,7 +39,7 @@
                     </v-tab-item>
                 </v-tabs-items>
             </v-card-text>
-        </v-card>
+        </v-card>        
     </div>
   </template>
   
@@ -67,12 +67,19 @@
         loginitem: ["스마트공방 신청(등록)", "스마트공방"],
         tabs: 0,
         items: ["로그인", "아이디 찾기", "비밀번호 찾기"],
-        isLoading: false,
+        isLoading: false,        
       };
+    },
+    mounted() {
+      this.init();
     },
     methods: {
       ...mapActions("user", ["signInLocal", "findIdLocal", "findPwLocal"]),
       ...mapMutations("user", ["SET_MEMBER", "SET_TOKEN"]),
+      async init() {
+        const shopchk = await this.$axios.get("/api/shopinfo/checkShopinfo");
+        this.loginchk = shopchk ? 0 : 1;
+      },
       async loginLocal(form) {
         this.isLoading = true;      
         const data = await this.signInLocal(form);

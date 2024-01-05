@@ -31,7 +31,7 @@ export const getters = {
 		return state.member && state.member?.i_level >= LV.ADMIN;
 	},
 	isSuperMag(state) {
-		return state.member && state.member?.i_level == LV.SUPER && state.member?.i_id == "freeview";
+		return state.member && state.member?.i_level >= LV.SUPER && state.member?.c_com == "SYSTEM";
 	},
 	isSuper(state) {
 		return state.member && state.member?.i_level >= LV.SUPER;

@@ -19,14 +19,10 @@
         </v-row>
         <v-row no-gutters>
              <v-responsive width="60px">
-                <input-duplicate-dual-check ref="i_id"
-                    label="관리자ID"
-                    v-model="form.i_id"
-                    :aFiled="form.c_com"
-                    :cbCheck="keyCheckId"
-                    :origin="originKeyId"
-                    :readonly="!!data"
-                    :rules="[rules.require({ label: '관리자ID' }), rules.alphaNum()]" />
+                <v-text-field label="관리자ID"             
+                v-model="form.i_id"
+                :readonly="!!data"
+                :rules="rules.name({ label: '관리자ID' })" />
             </v-responsive>
             <v-spacer />
             <v-text-field label="관리자성명"             
@@ -66,8 +62,13 @@
         <v-text-field label="장비모니터링주소" v-model="form.t_monitor"></v-text-field>
         <!-- <v-file-input  label="회사 Log" v-model="form.t_worklog" prepend-icon="mdi-account-box" accept="image/jpg,image/png" /> -->
         <v-textarea label="설명" v-model="form.t_remark" />        
-        <v-btn type="submit" block>저장</v-btn>
-        
+        <v-row no-gutters>
+            <v-responsive width="100px">
+                <v-btn type="submit" block color="primary">저장</v-btn>
+            </v-responsive>
+            <v-spacer />
+            <v-btn v-if="!isNew" @click="onDelete" color="red darken-1">삭제</v-btn>
+        </v-row>        
     </v-form>
     </v-container>
 </template>
@@ -132,15 +133,11 @@ export default {
         isLoad() {
             this.init();
         },
-        'form.c_com'() {
-            this.$refs.i_id.init();
-        }
-       
     },
     computed: {
         rules: () => validateRules,
         originKeyCom() { return this.data ? this.data.c_com : ""; },
-        originKeyId() { return this.data ? this.data.i_id : ""; },        
+        // originKeyId() { return this.data ? this.data.i_id : ""; },        
     },
     methods: {
         async init() {    
@@ -168,7 +165,7 @@ export default {
             if (this.$refs.form) {
                 this.$refs.form.resetValidation();
                 this.$refs.c_com.init();
-                this.$refs.i_id.init();
+                // this.$refs.i_id.init();
             }
         },
         setUseYN() {
@@ -185,11 +182,18 @@ export default {
             if (!this.valid) return;
             
             if (!this.$refs.c_com.validate()) return;
-            if (!this.$refs.i_id.validate()) return;
+            
 
             this.$emit('onSave', this.form);  
             this.init();      
-        }       
+        },
+        async onDelete() {
+            const res = await this.$ezNotify.confirm("삭제 하시겠습니까 ?", "삭제", {icon: "mdi-message-bulleted-off", width: 350,});
+            if(!res) return;
+
+            this.$emit('onDelete', this.form);  
+            this.init();      
+        },
     },
 }
 </script>

@@ -25,8 +25,9 @@ const systemModel = {
         // 권한 확인
         if (!isGrant(req, LV.SUPER)) {
             throw new Error('권한이 없습니다.');
-        }   
-        const sql = sqlHelper.SelectSimple(TABLE.WORKSITE);        
+        } 
+        const { c_com } = req.query;        
+        const sql = c_com ? sqlHelper.SelectSimple(TABLE.WORKSITE, {c_com}) : sqlHelper.SelectSimple(TABLE.WORKSITE);
         const [rows] = await db.execute(sql.query, sql.values);
         return rows;
     },
@@ -58,13 +59,15 @@ const systemModel = {
         payload.f_use == 'N' ? payload.d_leave_at = at :  delete payload.d_leave_at;
 
         const sql = sqlHelper.Insert(TABLE.WORKSITE, payload);
-        const [row] = await db.execute(sql.query, sql.values);
+        const [row] = await db.execute(sql.query, sql.values);    /// 사업장 tb_worksite 저장
         if (row.affectedRows == 1) {
             payload.p_password = jwt.generatePassword(payload.p_pw);;
+            payload.i_password = payload.p_pw;
             payload.i_level = 9;
             payload.d_update_at = at;
             payload.t_create_ip = getIp(req);
 
+            delete payload.f_use;
             delete payload.n_com;
             delete payload.p_pw;
             delete payload.i_company;
@@ -72,13 +75,21 @@ const systemModel = {
             delete payload.f_kpichk;
             delete payload.n_kpiconm;
             delete payload.t_monitor;
+            delete payload.t_remark;
             delete payload.t_worklog;
             delete payload.t_worksign;
-            const sql2 = sqlHelper.Insert(TABLE.USERS, payload);
-            const [row2] = await db.execute(sql2.query, sql2.values);
-        } 
-        await db.execute('COMMIT');
-        return row.affectedRows == 1;                
+            
+            const sql2 = sqlHelper.Insert(TABLE.MEMBER, payload);
+            const [row2] = await db.execute(sql2.query, sql2.values);   // 사용자 정보저장
+            if (row.affectedRows == 1) {
+                return true;
+            } else {
+                const { c_com } = payload;
+                const sql3 = sqlHelper.DeleteSimple(TABLE.WORKSITE, {c_com})
+                await db.execute(sql3.query, sql3.values);   
+            }
+        }  
+        return false;
     },
     async updateWorksite(req) {
         const at = moment().format('LT')        
@@ -95,9 +106,12 @@ const systemModel = {
         const { c_com, i_id } = payload
         const sql = sqlHelper.Update(TABLE.WORKSITE, payload, {c_com, i_id});
         const [row] = await db.execute(sql.query, sql.values);
-        if (row) {
+        
+        if (row.changedRows) {
             // tb_users UPDATE 처리
+            payload.i_password = payload.p_pw;
             payload.p_password = jwt.generatePassword(payload.p_pw);;
+            delete payload.f_use;
             delete payload.n_com;
             delete payload.p_pw;
             delete payload.i_company;
@@ -105,14 +119,23 @@ const systemModel = {
             delete payload.f_kpichk;
             delete payload.n_kpiconm;
             delete payload.t_monitor;
+            delete payload.t_remark;
             delete payload.t_worklog;
             delete payload.t_worksign;
           
-            const sql2 = sqlHelper.Update(TABLE.USERS, payload, {c_com, i_id});
+            const sql2 = sqlHelper.Update(TABLE.MEMBER, payload, {c_com, i_id});
             const [row2] = await db.execute(sql2.query, sql2.values);
-        }
-        await db.execute('COMMIT');
-        return row;
+
+        }        
+        return !!row.changedRows;
+    },
+    async worksitedel(req) {
+        const payload = { ...req.body };
+        const { c_com } = payload;
+        const sql = sqlHelper.DeleteSimple(TABLE.WORKSITE, { c_com });
+        const [rv] = await db.execute(sql.query, sql.values);
+        
+        return rv.affectedRows == 1;
     },
     
     // 사업장별 사용자 관리
@@ -459,7 +482,7 @@ const systemModel = {
     async siteImageSave(req) {
         const { c_com } = req.body;  
         if ( !req.files ) return '';
-        
+
         const { t_image } = req.files;
 		const fileName = `${c_com}_log${path.extname(t_image.name)}`;
         const newFile = `${UPLOAD_PATH}/worksite/comlog/${fileName}`;   // 서버 Upload 절대 Path 
@@ -476,11 +499,9 @@ const systemModel = {
         values.push(tPathFile); 
         values.push(c_com); 
         const res = await db.execute(query, values);
-        if (res.affectedRows < 1) {
-            await db.execute('ROLLBACK');
+        if (res.affectedRows < 1) {            
             return '';
-        }
-        await db.execute('COMMIT');
+        }        
         return tPathFile;
     },
     async getSiteImage(req) {

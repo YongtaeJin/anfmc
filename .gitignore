@@ -23,3 +23,8 @@ pnpm-debug.log*
 *.sw?
 
 yarn.lock
+
+# 개발시 첨부파일..
+dist
+server/upload/shopsigned
+server/upload/worksite
