@@ -86,7 +86,7 @@ import TooltipBtn from '@/components/etc/TooltipBtn.vue';
 import EzDialog2 from '@/components/etc/EzDialog2.vue';
 import TiptabMail from '../../components/tiptab/TiptabMail.vue';
 export default {
-  components: { ShopInputMagFileForm, TooltipBtn, EzDialog2, TiptabMail },
+    components: { ShopInputMagFileForm, TooltipBtn, EzDialog2, TiptabMail },
     name: "ShopInputMag",    
     data() {
         return {
@@ -110,8 +110,7 @@ export default {
                 to_email: "",
                 cc_email: "",
                 body: "",
-            },
-            mailBody: "",
+            },         
         }
     },
     beforeCreate() {        

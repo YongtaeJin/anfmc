@@ -560,7 +560,30 @@ const shopinfoModel = {
 		const [row] = await db.execute(sql.query, sql.values);
 		return row;
 	},
-
+	async getShopArgeeMag(req) {
+		const {i_shop } = req.body;
+		const sql = { query: "",  values: [] }
+		sql.query = `select a.i_shop, a.i_id, trim(coalesce(a.n_company, a.i_id)) n_company, a.f_argeechk, \n` 
+		          + `       max(b.rnum) rnum, \n`
+				  + `       max(if(b.rnum = 1, b.n_nm, '')) h1, max(if(b.rnum = 2, b.n_nm, '')) h2, max(if(b.rnum = 3, b.n_nm, '')) h3, max(if(b.rnum = 4, b.n_nm, '')) h4, max(if(b.rnum = 5, b.n_nm, '')) h5, max(if(b.rnum = 6, b.n_nm, '')) h6, max(if(b.rnum = 7, b.n_nm, '')) h7, max(if(b.rnum = 8, b.n_nm, '')) h8, max(if(b.rnum = 9, b.n_nm, '')) h9, max(if(b.rnum = 10, b.n_nm, '')) h10, \n`
+				  + `       max(if(b.rnum = 11, b.n_nm, '')) h11, max(if(b.rnum = 12, b.n_nm, '')) h12, max(if(b.rnum = 13, b.n_nm, '')) h13, max(if(b.rnum = 14, b.n_nm, '')) h14, max(if(b.rnum = 15, b.n_nm, '')) h15, max(if(b.rnum = 16, b.n_nm, '')) h16, max(if(b.rnum = 17, b.n_nm, '')) h17, max(if(b.rnum = 18, b.n_nm, '')) h18, max(if(b.rnum = 19, b.n_nm, '')) h19, max(if(b.rnum = 20, b.n_nm, '')) h20, \n`
+				  + `       max(if(b.rnum = 1 and c.f_noact <> 'N', c.t_att, '')) t1, max(if(b.rnum = 2 and c.f_noact <> 'N', c.t_att, '')) t2, max(if(b.rnum = 3 and c.f_noact <> 'N', c.t_att, '')) t3, max(if(b.rnum = 4 and c.f_noact <> 'N', c.t_att, '')) t4, max(if(b.rnum = 5 and c.f_noact <> 'N', c.t_att, '')) t5, max(if(b.rnum = 6 and c.f_noact <> 'N', c.t_att, '')) t6, max(if(b.rnum = 7 and c.f_noact <> 'N', c.t_att, '')) t7, max(if(b.rnum = 8 and c.f_noact <> 'N', c.t_att, '')) t8, max(if(b.rnum = 9 and c.f_noact <> 'N', c.t_att, '')) t9, max(if(b.rnum = 10 and c.f_noact <> 'N', c.t_att, '')) t10, \n`
+				  + `       max(if(b.rnum = 11 and c.f_noact <> 'N', c.t_att, '')) t11, max(if(b.rnum = 12 and c.f_noact <> 'N', c.t_att, '')) t12, max(if(b.rnum = 13 and c.f_noact <> 'N', c.t_att, '')) t13, max(if(b.rnum = 14 and c.f_noact <> 'N', c.t_att, '')) t14, max(if(b.rnum = 15 and c.f_noact <> 'N', c.t_att, '')) t15, max(if(b.rnum = 16 and c.f_noact <> 'N', c.t_att, '')) t16, max(if(b.rnum = 17 and c.f_noact <> 'N', c.t_att, '')) t17, max(if(b.rnum = 18 and c.f_noact <> 'N', c.t_att, '')) t18, max(if(b.rnum = 19 and c.f_noact <> 'N', c.t_att, '')) t19, max(if(b.rnum = 20 and c.f_noact <> 'N', c.t_att, '')) t20 \n`
+				  + `  from tb_shopinput a \n`
+				  + `       left outer  join  (select i_shop, i_ser, f_gubun,  @rownum := @rownum+1 AS rnum, n_nm \n`
+				  + `                            from tb_shopmag_file, (SELECT @rownum := 0) AS R \n`
+				  + `                           where i_shop = ? and f_gubun = '3' order by i_sort) b on a.i_shop = b.i_shop \n`
+				  + `       left outer join tb_shopinput_file c on a.i_shop = c.i_shop and a.i_id = c.i_id and b.i_ser = c.i_ser \n`
+				  + ` where a.i_shop = ? \n`
+				  + ` group by a.i_shop, a.i_id, a.n_company, a.f_argeechk \n`
+				  + ` order by i_id `;
+				  
+		sql.values.push(i_shop);
+		sql.values.push(i_shop);
+		// console.log(sql.query)
+		const [row] = await db.execute(sql.query, sql.values);
+		return row;
+	},
 
 	async shopgetEmail(req) {
 		const { gubun, i_shop, i_id } = req.query;
@@ -578,7 +601,7 @@ const shopinfoModel = {
        	return row;	
 	},
 	async postMailSend(req) {
-		const title = 'ANFMC';		
+		const title = 'ANFMC';				
 		const payload = {
 			...req.body,
 		};

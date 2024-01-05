@@ -113,7 +113,8 @@ export default {
             if (this.fileLists) {
                 const fileBuffer = await this.$axios.get(`/api/shopinfo/getFileDownZip?i_shop=${ this.fileLists[0].i_shop }&i_id=${ this.fileLists[0].i_id }&f_gubun=${ this.fileLists[0].f_gubun }&f_filetype=${f_filetype}`);
                 if (fileBuffer ) {
-                    save (fileBuffer, `${this.companyName}.zip`);
+                    let gn = this.fileLists[0].f_gubun == "1" ? '_신청서' : this.fileLists[0].f_gubun == "2" ? '_추가서류' : this.fileLists[0].f_gubun == "3" ? '_협약서' : '';
+                    save (fileBuffer, `${this.companyName}${gn}.zip`);
                     alert('File Donw load Click !!!!!'); 
                 } else {
                    await this.$ezNotify.alert("다운로드 실패 !!", "오류" );

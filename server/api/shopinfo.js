@@ -101,6 +101,11 @@ router.post('/ShopInputMageNaraChk', async (req, res)=> {
 	const result = await modelCall(shopinfoModel.ShopInputMageNaraChk, req);
 	res.json(result);
 }),
+router.post('/getShopArgeeMag', async (req, res)=> {
+	const result = await modelCall(shopinfoModel.getShopArgeeMag, req);
+	res.json(result);
+}),
+
 router.get('/shopgetEmail', async (req, res)=> {	
 	const result = await modelCall(shopinfoModel.shopgetEmail, req);
 	res.json(result);
