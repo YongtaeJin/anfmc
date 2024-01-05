@@ -199,8 +199,8 @@ export default {
             this.mailinfo.to_email = tomail;
             this.mailinfo.cc_email = ccmail;
             this.mailinfo.body = html;
-            
-            const data = await this.$axios.post(`/api/shopinfo/postMailSend`,this.form);
+
+            const data = await this.$axios.post(`/api/shopinfo/postMailSend`,this.mailinfo);
             this.$refs.ez_wait.close();
             if (data == "ok") {
                 this.$ezNotify.alert("정상적으로 메일 발송 하였습니다..... ", "성공");

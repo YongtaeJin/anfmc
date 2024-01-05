@@ -613,12 +613,12 @@ const shopinfoModel = {
 				t_content: payload.body,
 				d_crdt: moment().format('LT'),
 			}
+			
 			await sendMailer(`스마트공방 관리자`, payload.to_email, payload.cc_email, payload.title, payload.body);
 			// const smSql = sqlHelper.Insert('tb_mailsend', tb_mailsend);
 			// await db.execute(smSql.query, smSql.values);
 			
 		} catch (e) {
-			console.log(e);
 			return { err: `email 발송에 필패 하였습니다.\n관리자에게 문의 주세요.` }
 		}
        	return 'ok';
