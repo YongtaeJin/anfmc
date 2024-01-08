@@ -23,7 +23,7 @@ const sqlHelper = {
 			let sorts = [];
 			const keys = Object.keys(sort);
 			for (const key of keys) {
-				console.log(sort[key]), key + (sort[key] );
+				// console.log(sort[key]), key + (sort[key] );
 				sorts.push(key + (sort[key] ? ' ASC ' : ' DESC '))
 			}
 			if (sorts.length) {

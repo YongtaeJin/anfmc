@@ -203,19 +203,21 @@ const systemModel = {
         // console.log(req.user)
         if (!isGrant(req, LV.SYSTEM))  throw new Error('권한이 없습니다.');
         
-        const { c_com } = req.user;
-        const sort = {s_sort: true, c_gcode: true};
-
-        const sql = sqlHelper.SelectSimple(TABLE.GRPCODE, { c_com }, [], sort);    
+        const { c_com } = !!req.query.c_com ? req.query : req.user;                
+        let c_gcode = !!req.query.c_gcode ? req.query.c_gcode : null;
+        const sort = {s_sort: true, c_gcode: true};        
+        // const sql = sqlHelper.SelectSimple(TABLE.GRPCODE, { c_com }, [], sort);                    
+        const sql = !!c_gcode ? sqlHelper.SelectSimple(TABLE.GRPCODE, { c_com, c_gcode }, [], sort) : sqlHelper.SelectSimple(TABLE.GRPCODE, { c_com }, [], sort);        
         const [rows] = await db.execute(sql.query, sql.values);
-    
+ 
         return rows;
     },
     async comcode(req) {     
         // 권한 확인
         if (!isGrant(req, LV.SYSTEM))  throw new Error('권한이 없습니다.');
         
-        const { c_com } = req.user;
+        // const { c_com } = req.user;
+        const { c_com } = !!req.query.c_com ? req.query : req.user;        
         const sort = {s_sort: true, c_code: true};
         const sql = sqlHelper.SelectSimple(TABLE.COMCODE, { c_com }, [], sort);    
         const [rows] = await db.execute(sql.query, sql.values);
@@ -227,7 +229,7 @@ const systemModel = {
 			TABLE.GRPCODE,
 			{ [com]: value1, [grp]: value2 },
 			['COUNT(*) AS cnt']
-		);
+		);        
         const [[row]] = await db.execute(sql.query, sql.values);
         return row;
     },
@@ -236,7 +238,7 @@ const systemModel = {
 			TABLE.COMCODE,
 			{ [com]: value1, [grp]: value2, [cod]: value3 },
 			['COUNT(*) AS cnt']
-		);
+		);        
         const [[row]] = await db.execute(sql.query, sql.values);
         return row;
     }, 
@@ -246,9 +248,11 @@ const systemModel = {
         const at = moment().format('LT');                
         const payload = {
 			...req.body,
-        }
-        const {c_com, c_gcode } = payload;          
-        if (!payload.d_create_at) { 
+        }        
+        const {c_com, c_gcode, isnew } = payload;          
+        delete payload.isnew;
+
+        if (isnew) { 
             payload.n_crnm = req.user.n_name;
             payload.d_create_at = at;
             
@@ -267,7 +271,7 @@ const systemModel = {
         }
         const grpsql = sqlHelper.SelectSimple(TABLE.GRPCODE,{ c_com,  c_gcode });
         const [[grpcode]] = await db.execute(grpsql.query, grpsql.values);
-        await db.execute('COMMIT');
+        
         return grpcode;
     },
     async delGprCode(req) {
@@ -276,7 +280,7 @@ const systemModel = {
                 
         const sql = sqlHelper.DeleteSimple(TABLE.GRPCODE, { c_com, c_gcode });
         const [row] = await db.execute(sql.query, sql.values);
-        await db.execute('COMMIT');
+        
 		return row.affectedRows == 1;
 	},
 
@@ -286,7 +290,8 @@ const systemModel = {
         const payload = {
 			...req.body,
         }
-        const {c_com, c_gcode, c_code } = payload; 
+        const {c_com, c_gcode, c_code, isnew } = payload; 
+        delete payload.isnew;
         
         delete payload.d_buf1;
         delete payload.d_buf3;
@@ -295,7 +300,7 @@ const systemModel = {
         delete payload.t_buf2;
         delete payload.t_buf3;
 
-        if (!payload.d_create_at) { 
+        if (isnew) { 
             payload.n_crnm = req.user.n_name;
             payload.d_create_at = at;
             delete payload.d_update_at;
@@ -317,7 +322,7 @@ const systemModel = {
         }
         const comsql = sqlHelper.SelectSimple(TABLE.COMCODE,{ c_com, c_gcode, c_code });
         const [[comcode]] = await db.execute(comsql.query, comsql.values);
-        await db.execute('COMMIT');
+        
         return comcode;
     },
     async delComCode(req) {
@@ -326,7 +331,7 @@ const systemModel = {
         
         const sql = sqlHelper.DeleteSimple(TABLE.COMCODE, { c_com, c_gcode, c_code });
         const [row] = await db.execute(sql.query, sql.values);
-        await db.execute('COMMIT');
+        
 		return row.affectedRows == 1;
 	},
 
@@ -442,22 +447,17 @@ const systemModel = {
         const sql3 = `insert into tb_grpcode (c_com, c_gcode, n_gcode, s_sort, t_remark, n_crnm, d_create_at) \n` +
                      `select '${c_com}', c_gcode, n_gcode, s_sort, t_remark, 'system', '${at}' \n` +
                      `  from tb_grpcode \n` +
-                     `  where c_com = 'system' `;
+                     `  where c_com = 'BASECODE' `;
         
-        const sql4 = `insert into tb_comcode (c_com, c_gcode, c_code, n_code, s_sort, s_buf1, s_buf2, s_buf3, m_buf1, m_buf2, m_buf3, d_buf1, d_buf2, d_buf3, t_buf1, t_buf2, t_buf3, t_remark, n_crnm, d_create_at) \n` +
-                     `select '${c_com}', c_gcode, c_code, n_code, s_sort, s_buf1, s_buf2, s_buf3, m_buf1, m_buf2, m_buf3, d_buf1, d_buf2, d_buf3, t_buf1, t_buf2, t_buf3, t_remark, 'system', '${at}' \n` +
+        const sql4 = `insert into tb_comcode (c_com, c_gcode, c_code, n_code, s_sort, s_buf1, s_buf2, s_buf3, m_buf1, m_buf2, m_buf3, d_buf1, d_buf2, d_buf3, t_buf1, t_buf2, t_buf3, f_base, t_remark, n_crnm, d_create_at) \n` +
+                     `select '${c_com}', c_gcode, c_code, n_code, s_sort, s_buf1, s_buf2, s_buf3, m_buf1, m_buf2, m_buf3, d_buf1, d_buf2, d_buf3, t_buf1, t_buf2, t_buf3, f_base, t_remark, 'system', '${at}' \n` +
                      `  from tb_comcode \n` +
-                     ` where c_com = 'system'`;
+                     ` where c_com = 'BASECODE'`;
         
-        res = await db.execute(sql1.query, sql1.values);
-        
-        res = await db.execute(sql2.query, sql2.values);
-        
-        await db.execute(sql3);
-        
+        res = await db.execute(sql1.query, sql1.values);        
+        res = await db.execute(sql2.query, sql2.values);        
+        await db.execute(sql3);        
         await db.execute(sql4);
-        
-        await db.execute('COMMIT'); 
 
         return true;
     },
@@ -467,7 +467,7 @@ const systemModel = {
         payload.d_open = moment().format('LT'); 
         const sql = sqlHelper.Insert(TABLE.OPENLOG, payload);      
         db.execute(sql.query, sql.values);
-        db.execute('COMMIT');
+        
     },
 
     async getMoniteraddr(req) {

@@ -1,16 +1,16 @@
 <template>
     <v-container fluid>
         <v-toolbar height="40px" background-color="primary" dark>
-            <v-toolbar-title>공통코드 관리</v-toolbar-title>
+            <v-toolbar-title>시스템코드 관리</v-toolbar-title>
             <v-spacer/>           
             <tooltip-btn label="조회" @click="init"><v-icon>mdi-magnify</v-icon></tooltip-btn>            
         </v-toolbar>
         <v-layout>
             <v-flex xs5>
-                <grpcode-form @onSelect="grpSelect" @onDelete="grpDelete" :data="grpCodelist" :job="false" :iframeHeight="iframeHeight"></grpcode-form>
+                <grpcode-form @onSelect="grpSelect" @onDelete="grpDelete" :data="grpCodelist" :job="true" :iframeHeight="iframeHeight"></grpcode-form>
             </v-flex>
             <v-flex xs7>            
-                <comcode-form @onSave="comSave" @onDelete="comDelete" :data="comGrpCode" :c_com="c_com" :c_gcode="c_gcode" :title="comTitle" :iframeHeight="iframeHeight"></comcode-form>
+                <comcode-form @onSave="comSave" @onDelete="comDelete" :data="comGrpCode" c_com='BASECODE' :c_gcode="c_gcode" :title="comTitle" :iframeHeight="iframeHeight"></comcode-form>
             </v-flex>
         </v-layout>
        
@@ -31,7 +31,6 @@ export default {
             grpCodelist: [], comCodeList: [], comGrpCode: [],
             c_gcode: "", c_code: "",
             comTitle: "Code",
-            c_com: this.$store.state.user.member?.c_com,
         }
     },
     
@@ -55,8 +54,8 @@ export default {
         },
         async init() {
             this.comGrpCode.splice(0);
-            this.grpCodelist = await this.$axios.get(`/api/system/grpcode?c_com=${this.c_com}`);
-            this.comCodeList = await this.$axios.get(`/api/system/comcode?c_com=${this.c_com}`);
+            this.grpCodelist = await this.$axios.get(`/api/system/grpcode?c_com=BASECODE`);
+            this.comCodeList = await this.$axios.get(`/api/system/comcode?c_com=BASECODE`);
         },
         grpSelect(grpcode) {            
             this.c_gcode = grpcode.c_gcode;

@@ -106,10 +106,16 @@ export default {
             this.item = deepCopy(item);             
             this.$refs.dialog.open();
         },
-
-        async showWorkSiteLog(event, { item }) {            
-            if (this.selected == item) return;
-            this.selected = item;
+        // async showWorkSiteLog(event, { item }) {            
+        //     if (this.selected == item) return;
+        //     this.selected = item;
+        // },
+        showWorkSiteLog :function (item, row) {
+            if (row) {
+                if (this.selected == item) return;
+                row.select(true);
+                this.selected = item;
+            }
         },
         async addWorkSite(item) {
             this.isLoad = true;

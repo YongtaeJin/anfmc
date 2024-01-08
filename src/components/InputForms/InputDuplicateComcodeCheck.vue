@@ -39,14 +39,9 @@ export default {
 			type: Function,
 			default : null,
 		},
-		origin : {
-			type : String,
-			default : "",
-		},
-		gcode : {
-			type : String,
-			default : "",
-		}
+		origin: { type : String, default : "", },
+		c_com: { type : String, default : "", },
+		c_gcode: { type : String, default : "", },
 	},
 	watch : {
 		origin() {
@@ -86,7 +81,7 @@ export default {
 			this.loading = true;
 			this.errMsg = "";
 			this.successMsg = "";
-			const data = await this.cbCheck(this.$store.state.user.member.c_com, this.gcode, this.value);
+			const data = await this.cbCheck(this.c_com, this.c_gcode, this.value);
 
 			if(!this.value) {
 				this.successMsg = "";

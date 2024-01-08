@@ -1,14 +1,21 @@
 <template>
     <v-container class="grey lighten-5">
         <v-form @submit.prevent="save" ref="form" v-model="valid" lazy-validation>
-            <!-- <v-text-field label="gcode" v-model="form.c_gcode"/> -->
-            <v-text-field label="No" 
-                v-model="form.s_sort"
-                :rules="[rules.Num()]" />
+            <v-row no-gutters>
+                <v-responsive width="10px">
+                    <v-text-field label="No"  v-model="form.s_sort" :rules="[rules.Num()]" />
+                </v-responsive>
+                <v-spacer />  
+                <v-responsive width="40px">
+                    <v-checkbox v-if="form.c_com=='BASECODE'" label="기본" v-model="form.f_base" true-value="B" false-value=""/>
+                </v-responsive>
+            </v-row>
+
             <input-duplicate-comcode-check ref="c_code"
                 label="Code"
                 v-model="form.c_code"
-                :gcode="form.c_gcode" 
+                :c_com="form.c_com"
+                :c_gcode="form.c_gcode" 
                 :cbCheck="keyCheckId"
                 :origin="originKeyId"
                 :readonly="!!data"
@@ -40,18 +47,10 @@ export default {
             type: Function,
             default: null,
         },
-        isLoad: {
-            type : Boolean,
-            default: null,
-        },
-        c_gcode: {
-            type : String,
-            default: null,
-        },
-        s_sort: {
-            type : Number,
-            default: 0,
-        },
+        isLoad: { type : Boolean, default: null, },
+        c_com: { type : String, default: null, },
+        c_gcode: { type : String, default: null, },
+        s_sort: { type : Number, default: 0, },
     },
     data() {
         return {
@@ -68,6 +67,7 @@ export default {
                 m_buf1: 0.0,
                 m_buf2: 0.0,
                 m_buf3: 0.0,                
+                f_base: "",
                 t_remark: "",
             },
         }
@@ -75,10 +75,9 @@ export default {
     created() {
         this.init();        
     },
-    watch: {
-        isLoad() {
-            this.init();
-        }
+    watch: {        
+        data() { this.init(); },
+        isLoad() { this.init(); }    
     },
     computed: {
         rules: () => validateRules,
@@ -86,12 +85,12 @@ export default {
     },
     methods: {
         async init() {   
-            if (this.data) {      
+            if (this.data) {
                 this.form = deepCopy(this.data);         
             }
             else {
                 this.form = {
-                    c_com: this.$store.state.user.member.c_com,                    
+                    c_com: this.c_com,
                     c_gcode: this.c_gcode,
                     c_code: "",
                     n_code: "",
@@ -101,7 +100,8 @@ export default {
                     s_buf3: "",
                     m_buf1: 0,
                     m_buf2: 0,
-                    m_buf3: 0,                
+                    m_buf3: 0,
+                    f_base: this.c_com == "BASECODE" ? "B" : "",
                     t_remark: "",
                 }
             }

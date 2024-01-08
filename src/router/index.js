@@ -31,6 +31,9 @@ export function createRouter() {
 		}
 
 		const access = store.getters.access;
+		const isAdmin = store.getters['user/isAdmin'];
+		const isSuperMag = store.getters['user/isSuperMag'];
+		const isSuper = store.getters['user/isSupe'];
 		const GRANT = store.getters['user/GRANT'];
 		const isMember = !!store.state.user.member;		
 

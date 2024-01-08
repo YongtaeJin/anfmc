@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div>	
 		<v-list v-if="isSuperMag" dense class="mt-n6">
 			<v-subheader>관리자 메뉴</v-subheader>
 			<v-list-item
@@ -41,13 +41,14 @@ export default {
 	data() {
 		return {
 			admMenus : [
-				{title : '설정 관리', icon:'mdi-cog', to:'/adm/config'},
+				{title : '설정 관리', icon:'mdi-cog', to:'/adm/config'},				
+				{title : '시스템 코드', icon:'mdi-code-array', to:'/adm/BaseCode'},
 				{title : '사업장 관리', icon:'mdi-account-cog', to:'/adm/worksite'},
 				{title : 'KPI 관리', icon:'mdi-lan-connect', to:'/adm/kpimanager'},
 				{title : 'KPI Data', icon:'mdi-database', to:'/adm/kpidatainput'},
 			],
 			siteMenus : [				
-				{title : '사업장 관리', icon:'mdi-account-cog', to:'/adm/worksite'},
+				{title : '사업장 관리', icon:'mdi-account-cog', to:'/adm/worksite'},				
 				{title : 'KPI 관리', icon:'mdi-lan-connect', to:'/adm/kpimanager'},
 				{title : 'KPI Data', icon:'mdi-database', to:'/adm/kpidatainput'},
 			]
@@ -57,7 +58,7 @@ export default {
 		...mapState({
 			member : state => state.user.member,
 		}),
-		...mapGetters('user', ['isSuper', 'isSuperMag'])
+		...mapGetters('user', ['isSuper', 'isSuperMag', 'isAdmin'])
 	},
   methods: {
     ...mapActions("user", ["signOut"]),

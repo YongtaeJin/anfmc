@@ -41,6 +41,11 @@ const routes = [
 	},
 	// 시스템관리 
 	{
+		path: '/adm/BaseCode',
+		name: 'BaseCode',
+		component: () => import(/* webpackChunkName: "BaseCode" */ '../views/admin/BaseCodeView.vue')
+	},
+	{
 		path: '/adm/systemcode',
 		name: 'Systemcode',
 		component: () => import(/* webpackChunkName: "Systemcode" */ '../views/system/Systemcode.vue')

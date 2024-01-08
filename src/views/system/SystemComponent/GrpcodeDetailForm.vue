@@ -7,13 +7,14 @@
             <input-duplicate-grpcode-check ref="c_gcode"
                 label="Code"
                 v-model="form.c_gcode"                
+                :c_com="form.c_com"
                 :cbCheck="keyCheckId"
                 :origin="originKeyId"
-                :readonly="!!data"
+                :readonly="!!data"                
                 :rules="[rules.require({ label: 'Code' }), rules.alphaNum()]" />
             <v-text-field label="명칭" v-model="form.n_gcode" />
             <v-textarea label="설명" v-model="form.t_remark" />
-            <v-btn type="submit" color="primary" block>저장</v-btn>
+            <v-btn type="submit" color="primary" block :disabled=!job>저장</v-btn>
         </v-form>
         
     </v-container>    
@@ -36,14 +37,10 @@ export default {
             type: Function,
             default: null,
         },
-        isLoad: {
-            type : Boolean,
-            default: null,
-        },
-        s_sort: {
-            type : Number,
-            default: 0,
-        },
+        isLoad: { type : Boolean, default: null, },
+        s_sort: { type : Number, default: 0, },
+        job: { type: Boolean, default: false, },
+        c_com:  { type: String, default: null, },
     },
     data() {
         return {
@@ -75,7 +72,7 @@ export default {
             }
             else {
                 this.form = {
-                    c_com: this.$store.state.user.member.c_com,
+                    c_com: !!this.c_com ? this.c_com : this.$store.state.user.member.c_com,
                     c_gcode: "",
                     n_gcode: "",
                     s_sort: (this.s_sort | 0) + 1,
