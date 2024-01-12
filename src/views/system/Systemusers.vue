@@ -11,9 +11,7 @@
         <v-data-table :headers="headers" :items="items" @click:row="rowSelect" @dblclick:row="showRowInfo" class="elevation-1 text-no-wrap" 
             item-key="i_id" single-select
             :items-per-page="-1" hide-default-footer :footer-props="{'items-per-page-options': [10, 20, 30, 40, 50, 100, -1]}" 
-            :height="iframeHeight" > 
-        <!-- <v-data-table :headers="headers" :items="items" @dblclick:row=showRowInfo
-            v-model="selected" :single-select="true" item-key="i_id" show-select > -->
+            :height="iframeHeight" >         
             <template v-slot:[`item.i_level`]="{ item }">                
                 {{ getLvlabel(item.i_level) }}                
             </template>
@@ -55,14 +53,12 @@ export default {
         return {
             iframeHeight: 500, // 초기 높이 설정 (원하는 높이로 초기화)
             headers: [
-                {text: 'ID',  value: 'i_id', sortable: true, align:'center', },
-                {text: '성명',  value: 'n_name', sortable: true, align:'center', },
-                {text: '등급',  value: 'i_level', sortable: true, align:'center', width: "100px"},
-                {text: '사용',  value: 'f_use', sortable: true, align:'center', width: "100px"}, 
-                {text: '접속일',  value: 'd_login_at', sortable: false, align:'center', width: "150px"}, 
+                {text: 'ID',  value: 'i_id', sortable: false, align:'center', },
+                {text: '성명',  value: 'n_name', sortable: false, align:'center', },
+                {text: '등급',  value: 'i_level', sortable: false, align:'center', width: "100px"},
+                {text: 'email',  value: 'e_email', sortable: false, align:'center'}, 
                 {text: '생성일',  value: 'd_create_at', sortable: false, align:'center', width: "150px"}, 
-                {text: '갱신일',  value: 'd_update_at', sortable: false, align:'center', width: "150px"}, 
-                
+                {text: '갱신일',  value: 'd_update_at', sortable: false, align:'center', width: "150px"},                 
                 ],
             items : [],
             item: null,            
@@ -75,7 +71,7 @@ export default {
     computed: {        
     },    
     methods: {
-        ...mapActions("system", ["duplicateDualCheck", "iuWorkUser"]),
+        ...mapActions("system", ["userDuplicateDualCheck", "iuWorkUser"]),
         adjustIframeHeight() {
         // 브라우저 창의 높이를 iframe의 높이로 설정
             const windowHeight = window.innerHeight;
@@ -84,7 +80,6 @@ export default {
         getLvlabel (lv) {            
             var i = LVITEMS.findIndex(i => i.lv == lv );
             return (lv > -1) ?  LVITEMS[i].label : lv;
-            // return  lv;
         },
         rowSelect :function (item, row) {    
             row.select(true);            
@@ -109,6 +104,12 @@ export default {
             if (idx < 0) return;
             if (!this.item) return;
 
+            // 싸이트 관리자 ID삭제 불가
+            const rv = await this.$axios.post(`/api/system/worksiteuserChk`, this.item);
+            if (rv.cnt) {
+                this.$toast.info(`[${this.item.n_name}] 사이트관리자 ID는 삭제 할수 없습니다.`);
+                return
+            }
             const result = await this.$ezNotify.confirm(
 			 	`<b>성명 : ${this.item.n_name}</b><br> 삭제 하시겠습니까 ? <br> 삭제한 ID는 사용 불가 합니다.`,
 			 	`ID : ${this.item.i_id} 삭제`,
@@ -134,7 +135,7 @@ export default {
                 field: "i_id",
                 value,
             };            
-            return await this.duplicateDualCheck(payload); 
+            return await this.userDuplicateDualCheck(payload); 
         },
         async save(form) {            
             this.isLoading = true;

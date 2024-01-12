@@ -49,6 +49,7 @@ const systemModel = {
         const [[row]] = await db.execute(sql.query, sql.values);
         return row;
     },    
+
     async insertWorksite(req) {
         const at = moment().format('LT')
         const payload = {
@@ -143,7 +144,7 @@ const systemModel = {
         // 권한 확인        
         if (!isGrant(req, LV.SYSTEM))  throw new Error('권한이 없습니다.');        
         const { c_com } = req.user;
-        const sql = sqlHelper.SelectSimple(TABLE.USERS, { c_com });
+        const sql = sqlHelper.SelectSimple(TABLE.MEMBER, { c_com });
         sql.query = sql.query + ' and d_leave_at is null '
         const [rows] = await db.execute(sql.query, sql.values);
         
@@ -152,6 +153,21 @@ const systemModel = {
         });
         return rows;
     },
+    async worksiteuserChk(req) {
+        const { c_com, i_id } = req.body;
+        const sql = sqlHelper.SelectSimple(TABLE.WORKSITE, {c_com, i_id}, ['COUNT(*) AS cnt']);
+        const [[row]] = await db.execute(sql.query, sql.values);
+        return row;
+    },
+    async userDuplicateDualCheck({ com, aFiled, field, value }) {
+        const sql = sqlHelper.SelectSimple(
+			TABLE.MEMBER,
+			{ [com]: aFiled, [field]: value },
+			['COUNT(*) AS cnt']
+		);
+        const [[row]] = await db.execute(sql.query, sql.values);
+        return row;
+    },
     async iuWorkUser(req) {
         const at = moment().format('LT');        
         if (!isGrant(req, LV.SYSTEM))  throw new Error('권한이 없습니다.');
@@ -159,14 +175,14 @@ const systemModel = {
 			...req.body,
         }
         const {c_com, i_id } = payload;        
-        if (payload.p_password) payload.p_password = jwt.generatePassword(payload.p_password);
+        if (payload.i_password) payload.p_password = jwt.generatePassword(payload.i_password);
         delete payload.d_leave_at;
         if (!payload.d_create_at) { 
             payload.d_create_at = at;
             payload.d_update_at = at;
             payload.t_create_ip = getIp(req);
             
-            const sql = sqlHelper.Insert(TABLE.USERS, payload);
+            const sql = sqlHelper.Insert(TABLE.MEMBER, payload);
             const [row] = await db.execute(sql.query, sql.values);            
             if (row.affectedRows < 1) return '';                        
         } else {
@@ -175,14 +191,13 @@ const systemModel = {
             delete payload.d_create_at;
             delete payload.t_create_ip;            
 
-            const sql = sqlHelper.Update(TABLE.USERS, payload, {c_com, i_id});
+            const sql = sqlHelper.Update(TABLE.MEMBER, payload, {c_com, i_id});
             const [row] = await db.execute(sql.query, sql.values);
             if (row.affectedRows < 1) return '';            
         }
-
-        const usersql = sqlHelper.SelectSimple(TABLE.USERS,{ c_com,  i_id });
+        const usersql = sqlHelper.SelectSimple(TABLE.MEMBER,{ c_com,  i_id });
         const [[user]] = await db.execute(usersql.query, usersql.values);
-        await db.execute('COMMIT');
+        
         return clearUserField(user);
     },
 
@@ -191,9 +206,8 @@ const systemModel = {
 		const { c_com, i_id } = req.params;
         const field = { d_leave_at : moment().format('LT')};
         
-        const sql = sqlHelper.Update(TABLE.USERS, field, { c_com, i_id });        
-        const [row] = await db.execute(sql.query, sql.values);
-        await db.execute('COMMIT');
+        const sql = sqlHelper.Update(TABLE.MEMBER, field, { c_com, i_id });        
+        const [row] = await db.execute(sql.query, sql.values);        
 		return row.affectedRows == 1;
 	},
 

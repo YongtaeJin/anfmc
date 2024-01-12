@@ -22,7 +22,12 @@ export const actions = {
 		const { $axios } = Vue.prototype;
 		const data = await $axios.patch(`/api/system`, form);	
 		return !!data;
-	},	
+	},		
+	async userDuplicateDualCheck(ctx, { com, aFiled, field, value }) {
+		const { $axios } = Vue.prototype;
+		const data = await $axios.get(`/api/system/userDuplicateDualCheck/${com}/${aFiled}/${field}/${value}`);
+		return data;
+	},
 	async iuWorkUser( { commit }, form) {
 		const { $axios } = Vue.prototype;
 		const data = await $axios.post('/api/system/iuWorkUser', form);

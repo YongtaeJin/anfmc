@@ -38,6 +38,14 @@ router.get('/worksiteusers', async (req, res) => {
 	const result = await modelCall(systemModel.worksiteusers, req);
 	res.json(result);
 });
+router.post('/worksiteuserChk', async (req, res) => {
+	const result = await modelCall(systemModel.worksiteuserChk, req);
+	res.json(result);
+});
+router.get('/userDuplicateDualCheck/:com/:aFiled/:field/:value', async (req, res) => {	
+	const result = await modelCall(systemModel.userDuplicateDualCheck, req.params)	
+	res.json(result);
+});
 router.post('/iuWorkUser', async (req, res) => {
 	const result = await modelCall(systemModel.iuWorkUser, req);
 	res.json(result);

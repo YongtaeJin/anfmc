@@ -9,22 +9,24 @@
                 :origin="originKeyId"
                 :readonly="!!data"
                 :rules="[rules.require({ label: 'ID' }), rules.alphaNum()]" />
-            <v-text-field ref="p_password" label="성명"             
-                v-model="form.n_name" />
-            <input-password label="비밀번호"
-                v-model="form.p_password"
-                :rules="rules.password2({ label: '비밀번호', required: false , len: 3 })" />
+            <v-text-field ref="n_name" label="성명"             
+                v-model="form.n_name"
+                :rules="[rules.require({ label: '성명' })]"
+                 />
+            <input-password ref="i_password" label="비밀번호"
+                v-model="form.i_password"
+                :rules="rules.password2({ label: '비밀번호', required: true , len: 3 })" />
             <v-select laebl="사용등급"
                 v-model="form.i_level"
                 :items="lvitems"
                 item-text="label"
                 item-value="lv"
                 />
-            <input-radio label="사용여부"
+            <!-- <input-radio label="사용여부"
                 v-model="form.f_use"
                 row
                 :items="yesnoItem"
-                :rules="[rules.require({ label: '사용' })]"/>
+                :rules="[rules.require({ label: '사용' })]"/> -->
             <v-textarea label="설명" v-model="form.t_remark" />
             <v-btn type="submit" color="primary" block>저장</v-btn>
         </v-form>       
@@ -62,9 +64,8 @@ export default {
                 c_com: "",
                 i_id: "",
                 n_name: "",
-                p_password: "",
+                i_password: "",
                 i_level: 6,
-                f_use: "Y",
                 t_remark: "",
             },
             yesnoItem: [
@@ -95,9 +96,8 @@ export default {
                 this.form = {
                     c_com: this.$store.state.user.member.c_com,
                     i_id: "",
-                    n_name: "",                    
-                    f_use: "Y",
-                    p_password: "",
+                    n_name: "",
+                    i_password: "a1234",
                     i_level: 6,
                     t_remark: "",
                 }
