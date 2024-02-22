@@ -414,44 +414,6 @@ const store = new Vuex.Store({
 					newTab : false,
 					subItems : []
 				},
-				{
-					title : "KPI",
-					icon : "mdi-lan-connect",
-					to : '',
-					com : "FMC",
-					grant : 11, 
-					newTab : false,
-					subItems : [
-						{
-							title : "Level 1",
-							icon : "",
-							to : '/kpi/level1',
-							com : "FMC",
-							grant : 6, 
-							newTab : false,
-							subItems : []
-						},
-						{
-							title : "Level 2",
-							icon : "",
-							to : '/kpi/level2',
-							com : "FMC",
-							grant : 6, 
-							newTab : false,
-							subItems : []
-						},
-						{
-							title : "Level 3",
-							icon : "",
-							to : '/kpi/level3',
-							com : "FMC",
-							grant : 6, 
-							newTab : false,
-							subItems : []
-						},
-					]
-				}
-				
 			]
 		},
 	},

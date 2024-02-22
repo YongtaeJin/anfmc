@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["KPILevel2"],{6776:function(n,e,l){"use strict";l.r(e);var t=function(){var n=this,e=n._self._c;return e("div")},u=[],s={},c=s,i=l("2877"),o=Object(i["a"])(c,t,u,!1,null,null,null);e["default"]=o.exports}}]);
-//# sourceMappingURL=KPILevel2.8d7996b8.js.map

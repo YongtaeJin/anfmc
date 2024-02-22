@@ -1,234 +1,110 @@
 import Home from '../views/Home.vue'
+import About from '../views/About.vue'
+import NoAuthLogin from '../views/member/LoginForm.vue'
+import Join from '../views/member/Join.vue'
+import NoAuthModifyPassword from '../views/member/ModifyPassword.vue'
+import AdmConfig from '../views/admin/Config.vue'
+import AdmWorksite from '../views/admin/Worksite.vue'
+import BaseCode from '../views/admin/BaseCodeView.vue'
+import Systemcode from '../views/system/Systemcode.vue'
+import Systemusers from '../views/system/Systemusers.vue'
+import Notice from '../views/system/Notice.vue'
+import BasejobHr from '../views/basejob/BasejobHrView.vue'
+import BasejobVend from '../views/basejob/BasejobVend.vue'
+import BasejobItem from '../views/basejob/BasejobItem.vue'
+import BasejobProcess from '../views/basejob/BasejobProcess.vue'
+import BasejobPrType from '../views/basejob/BasejobPrType.vue'
+import BasejobRoute from '../views/basejob/BasejobRoute.vue'
+import Salesestimate from '../views/sales/SalesEstimate.vue'
+import EstimateList from '../views/sales/SalesEstimatelist.vue'
+import Salesorders from '../views/sales/SalesOrders.vue'
+import SalesOrderslist from '../views/sales/SalesOrderslist.vue'
+import ProdPlanning from '../views/prod/ProdPlanning.vue'
+
+import ProdWorkorder from '../views/prod/ProdWorkorder.vue'
+import ProdWork from '../views/prod/ProdWork.vue'
+import ProdWorkView from '../views/prod/ProdWorkView.vue'
+import ProdWorkorderview from '../views/prod/ProdWorkorderview.vue'
+import DerliverView from '../views/shipment/DerliverView.vue'
+import DerliverViewlist from '../views/shipment/DerliverViewlist.vue'
+import InvoiceView from '../views/shipment/InvoiceView.vue'
+import AccountView from '../views/shipment/AccountView.vue'
+import InvoiceList from '../views/shipment/InvoiceListView.vue'
+import Derliverrate from '../views/metrics/DerliverrateView.vue'
+import DefectrateRate from '../views/metrics/DefectraterateView.vue'
+import Clientsalerate from '../views/metrics/ClientsalerateView.vue'
+import Monitorview from '../views/monitor/MonitorView.vue'
+import Periodsalerate from '../views/metrics/Periodsalerate.vue'
+import kPIManager from '../views/kpi/KpiManager.vue'
+import kPIDataInput from '../views/kpi/kpiDataInputView.vue'
+import KPILevel1 from '../views/kpi/Level1View.vue'
+import KPILevel2 from '../views/kpi/Level2View.vue'
+import KPILevel3 from '../views/kpi/Level3View.vue'
+import NotLogin from '../views/NotLoginView.vue'
+import Error from '../views/Error.vue'
+// import ShopMag from '../views/shop/Shopmagview.vue'
+// import ShopSigned from '../views/shop/ShopSignedView.vue'
+// import ShopUserList from '../views/shop/ShopUserListView.vue'
+// import ShopInputMag from '../views/shop/ShopInputMagView.vue'
+// import ShopArgeeMag from '../views/shop/ShopArgeeMagView.vue'
+// import Error from '../views/Error.vue'
+
 
 const routes = [
-	{
-		path: '/',
-		name: 'Home',
-		component: Home,
-		
-	},
-	{
-		path: '/about',
-		name: 'About',
-		component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-	},
-	{
-		path: '/login',
-		name: 'NoAuthLogin',
-		component: () => import(/* webpackChunkName: "login" */ '../views/member/LoginForm.vue')
-		// component: () => import(/* webpackChunkName: "login" */ '../views/member/Login.vue')
-		
-	},
-	{
-		path: '/join',
-		name: 'NoAuthJoin',
-		component: () => import(/* webpackChunkName: "join" */ '../views/member/Join.vue')
-	},
-	{
-		path: '/modifyPassword/:hash',
-		name: 'NoAuthModifyPassword',
-		component: () => import(/* webpackChunkName: "modifyPassword" */ '../views/member/ModifyPassword.vue')
-	},
-	{
-		path: '/adm/config',
-		name: 'AdmConfig',
-		component: () => import(/* webpackChunkName: "AdmConfig" */ '../views/admin/Config.vue')
-	},	
-	{
-		path: '/adm/worksite',
-		name: 'AdmWorksite',
-		component: () => import(/* webpackChunkName: "AdmWorksite" */ '../views/admin/Worksite.vue')
-	},
+	{		path: '/',							name: 'Home',		component: Home,	},
+	{		path: '/about',						name: 'About',		component: About,	},
+	{		path: '/login',						name: 'NoAuthLogin',		component: NoAuthLogin,			},
+	{		path: '/join',						name: 'Join',		component: Join,	},
+	{		path: '/modifyPassword/:hash',		name: 'NoAuthModifyPassword',		component: NoAuthModifyPassword,	},
+	{		path: '/adm/config',		name: 'AdmConfig',		component: AdmConfig,	},	
+	{		path: '/adm/worksite',		name: 'AdmWorksite',		component: AdmWorksite,	},
 	// 시스템관리 
-	{
-		path: '/adm/BaseCode',
-		name: 'BaseCode',
-		component: () => import(/* webpackChunkName: "BaseCode" */ '../views/admin/BaseCodeView.vue')
-	},
-	{
-		path: '/adm/systemcode',
-		name: 'Systemcode',
-		component: () => import(/* webpackChunkName: "Systemcode" */ '../views/system/Systemcode.vue')
-	},
-	{
-		path: '/adm/systemusers',
-		name: 'Systemusers',
-		component: () => import(/* webpackChunkName: "Systemusers" */ '../views/system/Systemusers.vue')
-	},
-	{
-		path: '/adm/notice',
-		name: 'Notice',
-		component: () => import(/* webpackChunkName: "Notice" */ '../views/system/Notice.vue')
-	},
+	{		path: '/adm/BaseCode',		name: 'BaseCode',		component: BaseCode,	},
+	{		path: '/adm/systemcode',		name: 'Systemcode',		component: Systemcode,	},
+	{		path: '/adm/systemusers',		name: 'Systemusers',		component: Systemusers,	},
+	{		path: '/adm/notice',		name: 'Notice',		component: Notice,	},
 	// 기준정보
-	{
-		path: '/base/hrbase',
-		name: 'BasejobHr',
-		component: () => import(/* webpackChunkName: "BasejobHr" */ '../views/basejob/BasejobHrView.vue')
-	},	
-	{
-		path: '/base/vend',
-		name: 'Basejobvend',
-		component: () => import(/* webpackChunkName: "Basejobvend" */ '../views/basejob/BasejobVend.vue')
-	},	
-	{
-		path: '/base/item',
-		name: 'Basejobitem',
-		component: () => import(/* webpackChunkName: "Basejobitem" */ '../views/basejob/BasejobItem.vue')
-	},
-	{
-		path: '/base/process',
-		name: 'Basejobprocess',
-		component: () => import(/* webpackChunkName: "Basejobprocess" */ '../views/basejob/BasejobProcess.vue')
-	},
-	{
-		path: '/base/prtype',
-		name: 'Basejobprtype',
-		component: () => import(/* webpackChunkName: "Basejobprtype" */ '../views/basejob/BasejobPrType.vue')
-	},
-	{
-		path: '/base/route',
-		name: 'Basejobroute',
-		component: () => import(/* webpackChunkName: "Basejobroute" */ '../views/basejob/BasejobRoute.vue')
-	},
-	{
-		path: '/sales/estimate',
-		name: 'Salesestimate',
-		component: () => import(/* webpackChunkName: "Salesestimate" */ '../views/sales/SalesEstimate.vue')
-	},
-	{
-		path: '/sales/estimatelist',
-		name: 'EstimateList',
-		component: () => import(/* webpackChunkName: "EstimateList" */ '../views/sales/SalesEstimatelist.vue')
-	},
-	{
-		path: '/sales/orders',
-		name: 'Salesorders',
-		component: () => import(/* webpackChunkName: "Salesorders" */ '../views/sales/SalesOrders.vue')
-	},
-	{
-		path: '/sales/orderslist',
-		name: 'SalesordersList',
-		component: () => import(/* webpackChunkName: "SalesordersList" */ '../views/sales/SalesOrderslist.vue')
-	},
+	{		path: '/base/hrbase',		name: 'BasejobHr',		component: BasejobHr,	},	
+	{		path: '/base/vend',		name: 'Basejobvend',		component: BasejobVend,	},	
+	{		path: '/base/item',		name: 'Basejobitem',		component: BasejobItem,	},
+	{		path: '/base/process',		name: 'Basejobprocess',		component: BasejobProcess,	},
+	{		path: '/base/prtype',		name: 'Basejobprtype',		component: BasejobPrType,	},
+	{		path: '/base/route',		name: 'Basejobroute',		component: BasejobRoute,	},
+	{		path: '/sales/estimate',		name: 'Salesestimate',		component: Salesestimate,	},
+	{		path: '/sales/estimatelist',		name: 'EstimateList',		component: EstimateList,	},
+	{		path: '/sales/orders',		name: 'Salesorders',		component: Salesorders,	},
+	{		path: '/sales/orderslist',		name: 'SalesordersList',		component: SalesOrderslist,	},
 	// 생산계획/관리
-	{
-		path: '/prod/plan',
-		name: 'ProdPlanning',
-		component: () => import(/* webpackChunkName: "ProdPlanning" */ '../views/prod/ProdPlanning.vue')
-	},
-	{
-		path: '/prod/workorder',
-		name: 'ProdWorkorder',
-		component: () => import(/* webpackChunkName: "ProdWorkorder" */ '../views/prod/ProdWorkorder.vue')
-	},
-	{
-		path: '/prod/work',
-		name: 'ProdWork',
-		component: () => import(/* webpackChunkName: "ProdWork" */ '../views/prod/ProdWork.vue')
-	},
-	{
-		path: '/prod/workview',
-		name: 'ProdWorkView',
-		component: () => import(/* webpackChunkName: "ProdWorkView" */ '../views/prod/ProdWorkView.vue')
-	},
-	{
-		path: '/prod/workorderview',
-		name: 'ProdWorkorderview',
-		component: () => import(/* webpackChunkName: "ProdWorkorderview" */ '../views/prod/ProdWorkorderview.vue')	},
+	{		path: '/prod/plan',		name: 'ProdPlanning',		component: ProdPlanning,	},
+	{		path: '/prod/workorder',		name: 'ProdWorkorder',		component: ProdWorkorder,	},
+	{		path: '/prod/work',		name: 'ProdWork',		component: ProdWork,	},
+	{		path: '/prod/workview',		name: 'ProdWorkView',		component: ProdWorkView,	},
+	{		path: '/prod/workorderview',		name: 'ProdWorkorderview',		component: ProdWorkorderview,	},
 	
 	// 출하관리
-	{
-		path: '/shipment/derliver',
-		name: 'DerliverView',
-		component: () => import(/* webpackChunkName: "DerliverView" */ '../views/shipment/DerliverView.vue')
-	},
-	{
-		path: '/shipment/derliverlist',
-		name: 'DerliverViewList',
-		component: () => import(/* webpackChunkName: "DerliverViewList" */ '../views/shipment/DerliverViewlist.vue')
-	},
-	{
-		path: '/shipment/invoice',
-		name: 'Invoice',
-		component: () => import(/* webpackChunkName: "Invoice" */ '../views/shipment/InvoiceView.vue')
-	},
-	{
-		path: '/shipment/account',
-		name: 'Account',
-		component: () => import(/* webpackChunkName: "Account" */ '../views/shipment/AccountView.vue')
-	},
-	{
-		path: '/shipment/invoicelist',
-		name: 'InvoiceList',
-		component: () => import(/* webpackChunkName: "InvoiceList" */ '../views/shipment/InvoiceListView.vue')
-	},
+	{		path: '/shipment/derliver',		name: 'DerliverView',		component: DerliverView,	},
+	{		path: '/shipment/derliverlist',		name: 'DerliverViewList',		component: DerliverViewlist,	},
+	{		path: '/shipment/invoice',		name: 'InvoiceView',		component: InvoiceView, 	},
+	{		path: '/shipment/account',		name: 'AccountView',		component: AccountView,  	},
+	{		path: '/shipment/invoicelist',		name: 'InvoiceList',		component: InvoiceList,	},
 
 	// 현황분석
-	{
-		path: '/metrics/derliver',
-		name: 'Derliverrate',
-		component: () => import(/* webpackChunkName: "Derliverrate" */ '../views/metrics/DerliverrateView.vue')
-	},
-	{
-		path: '/metrics/defectrate',
-		name: 'DefectrateRate',
-		component: () => import(/* webpackChunkName: "DefectrateRate" */ '../views/metrics/DefectraterateView.vue')
-	},
-	{
-		path: '/metrics/clientsales',
-		name: 'Clientsalerate',
-		component: () => import(/* webpackChunkName: "Clientsalerate" */ '../views/metrics/ClientsalerateView.vue')
-	},
-	{
-		path: '/metrics/periodsales',
-		name: 'Periodsalerate',
-		component: () => import(/* webpackChunkName: "Periodsalerate" */ '../views/metrics/Periodsalerate.vue')
-	},
+	{		path: '/metrics/derliver',		name: 'Derliverrate',		component: Derliverrate,	},
+	{		path: '/metrics/defectrate',		name: 'DefectrateRate',		component: DefectrateRate,	},
+	{		path: '/metrics/clientsales',		name: 'Clientsalerate',		component: Clientsalerate,	},
+	{		path: '/metrics/periodsales',		name: 'Periodsalerate',		component: Periodsalerate, 	},
 
 	// 모니터링
-	{
-		path: '/monitor/monitor1',
-		name: 'Monitorview',
-		component: () => import(/* webpackChunkName: "Monitorview" */ '../views/monitor/MonitorView.vue')
-	},
+	{		path: '/monitor/monitor1',		name: 'Monitorview',		component: Monitorview,	},
 
 	// KPI 
-	{
-		path: '/adm/kpimanager',
-		name: 'kPIManager',
-		component: () => import(/* webpackChunkName: "kPIManager" */ '../views/kpi/KpiManager.vue')
-	},	
-	{
-		path: '/adm/kpidatainput',
-		name: 'kPIDataInput',
-		component: () => import(/* webpackChunkName: "kPIDataInput" */ '../views/kpi/kpiDataInputView.vue')
-	},
-	{
-		path: '/kpi/level1',
-		name: 'KPILevel1',
-		component: () => import(/* webpackChunkName: "KPILevel1" */ '../views/kpi/Level1View.vue')
-	},
-	{
-		path: '/kpi/level2',
-		name: 'KPILevel2',
-		component: () => import(/* webpackChunkName: "KPILevel2" */ '../views/kpi/Level2View.vue')
-	},
-	{
-		path: '/kpi/level3',
-		name: 'KPILevel3',
-		component: () => import(/* webpackChunkName: "KPILevel3" */ '../views/kpi/Level3View.vue')
-	},
-	{
-		path: '*',
-		name: 'Error',
-		component: () => import(/* webpackChunkName: "error" */ '../views/Error.vue')
-	},
-	{
-		path: '/notlogin',
-		name: 'NotLogin',
-		component: () => import(/* webpackChunkName: "error" */ '../views/NotLoginView.vue')
-	},
+	{		path: '/adm/kpimanager',		name: 'kPIManager',		component: kPIManager,	},	
+	{		path: '/adm/kpidatainput',		name: 'kPIDataInput',		component: kPIDataInput,	},
+	{		path: '/kpi/level1',		name: 'KPILevel1',		component: KPILevel1,	},
+	{		path: '/kpi/level2',		name: 'KPILevel2',		component: KPILevel2,	},
+	{		path: '/kpi/level3',		name: 'KPILevel3',		component: KPILevel3,	},
+	{		path: '*',		name: 'Error',		component: Error,	},
+	{		path: '/notlogin',		name: 'NotLogin',		component: NotLogin,	},
 
 	
 
@@ -258,8 +134,6 @@ const routes = [
 		name: 'ShopArgeeMag',
 		component: () => import(/* webpackChunkName: "ShopArgeeMag" */ '../views/shop/ShopArgeeMagView.vue')
 	},
-
-	
 
 	
 ]
